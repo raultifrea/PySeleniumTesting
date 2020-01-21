@@ -19,13 +19,17 @@ class Defs:
         self.driver = webdriver.Chrome()
 
     def center_element(self):
-        actions = ActionChains(self.driver)
-        actions.move_to_element(self.Center_Element).perform()
+        # actions = ActionChains(self.driver)
+        # actions.move_to_element(self.driver.find_element(self.Center_Element))
+        self.driver.execute_script("window.scrollTo(0, 200)")
 
     def load(self):
         self.driver.maximize_window()
         self.driver.get(self.URL)
         self.driver.find_element(*self.GDPR).click()
+
+    def quit(self):
+        self.driver.quit()
 
 
 

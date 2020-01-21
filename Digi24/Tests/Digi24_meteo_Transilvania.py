@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import unittest, os, datetime
 
-from Digi24.Pages.Digi24_meteo import Defs
+from personalprojects.Digi24.Pages.Digi24_meteo import Defs
 
 
 class Test_Meteo_Transilvania(unittest.TestCase):
@@ -17,10 +17,7 @@ class Test_Meteo_Transilvania(unittest.TestCase):
     meteo_romania = Defs()
     meteo_romania.load()
     meteo_romania.center_element()
-
-
-    # def tearDown(self):
-    #     self.driver.quit()
+    meteo_romania.quit()
 
 if __name__ == "__main__":
     unittest.main()
