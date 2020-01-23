@@ -4,21 +4,13 @@ import datetime, time
 
 from selenium.webdriver.common.by import By
 
-from Digi24.Proxies.Element_Proxy import ElementProxy
-from Digi24.Proxies.Locator import Locator
-
-
 class Defs:
     URL = 'https://www.digi24.ro/meteo'
     GDPR_locator = (By.XPATH, ".//*[@class='gdpr-button gdpr-trigger']")
-    Pressure_locator = Locator(By.CLASS_NAME, "atmo")
+    Pressure_locator = (By.CLASS_NAME, "atmo")
     City_locator = (By.CLASS_NAME, "city")
     Wind_locator = (By.CLASS_NAME, "wind")
     Temperature_locator = (By.CLASS_NAME,"temp")
-
-    @property
-    def pressure(self) -> ElementProxy:
-        return self.driver.find_element(self.Pressure_locator)
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -40,9 +32,10 @@ class Defs:
         x = ("%.2f" % round(formula, 2))
         return x
 
+
     def pressure(self):
-        self.pressure_value = self.driver.find_element(self.Pressure_locator).text
-        #self.pressure_value = self.driver.find_element(By.CLASS_NAME, "atmo").text
+        #self.pressure_value = self.driver.find_element(self.Pressure_locator).text
+        self.pressure_value = self.driver.find_element(By.CLASS_NAME, "atmo").text
         self.psi = str(self.mmHg_to_psi(self.pressure_value))
         self.city = self.driver.find_element(By.CLASS_NAME, "city").text
         print("Presiunea atm in " + self.city + " este " + self.psi + " psi")

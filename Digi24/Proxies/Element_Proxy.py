@@ -3,7 +3,7 @@ from typing import Iterator
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.remote.webelement import WebElement
 
-from pte_selenium.proxies.locator import Locator
+from Digi24.Proxies.Locator import Locator
 
 
 class ElementProxy:
