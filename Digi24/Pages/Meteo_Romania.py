@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-import datetime, time
+import datetime
 
 from selenium.webdriver.common.by import By
 
@@ -11,6 +11,7 @@ class Defs:
     City_locator = (By.CLASS_NAME, "city")
     Wind_locator = (By.CLASS_NAME, "wind")
     Temperature_locator = (By.CLASS_NAME,"temp")
+    Cities_descendant_locator = (By.XPATH, ".//*[@class ='weather-map weather-map-romania']/descendant::button")
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -32,7 +33,7 @@ class Defs:
         x = ("%.2f" % round(formula, 2))
         return x
 
-    def pressure(self):
+    def pressures(self):
         self.pressure_value = self.driver.find_element(*self.Pressure_locator).text
         self.psi = str(self.mmHg_to_psi(self.pressure_value))
         self.city = self.driver.find_element(*self.City_locator).text
@@ -46,10 +47,11 @@ class Defs:
             with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
                 print(format(self.city, '*^50'), file=file)
 
-    def run_pressure(self):
-        for x in range(1, 14):  # goes through all the cities on the map based on descendants
-            self.driver.find_element_by_xpath(".//*[@class='weather-map weather-map-romania']/descendant::button[{0}]".format(str(x))).click()
-            self.pressure()
+    def run_pressures(self):
+        list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator)
+        for element in list_of_elements:
+            element.click()
+            self.pressures()
 
         self.pressures_list = [float(x) for x in self.pressures_list]
         self.pressure_avg = sum(self.pressures_list) / len(self.pressures_list)
@@ -70,9 +72,10 @@ class Defs:
             with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
                 print(format(self.city, '*^50'), file=file)
 
-    def run_temperature(self):
-        for x in range(1, 14):  # goes through all the cities on the map based on descendants
-            self.driver.find_element_by_xpath(".//*[@class='weather-map weather-map-romania']/descendant::button[{0}]".format(str(x))).click()
+    def run_temperatures(self):
+        list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator)
+        for element in list_of_elements:
+            element.click()
             self.temperatures()
 
         self.temperatures_list = [int(x) for x in self.temperatures_list]
@@ -102,8 +105,9 @@ class Defs:
             print(format(self.city, '*^50'))
 
     def run_winds(self):
-        for x in range(1, 14):  # goes through all the cities on the map based on descendants
-            self.driver.find_element_by_xpath(".//*[@class='weather-map weather-map-romania']/descendant::button[{0}]".format(str(x))).click()
+        list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator)
+        for element in list_of_elements:
+            element.click()
             self.winds()
 
         self.winds_list = [float(x) for x in self.winds_list]

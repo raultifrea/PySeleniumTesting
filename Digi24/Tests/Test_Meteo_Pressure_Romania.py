@@ -14,7 +14,7 @@ class TestMeteoPressureRomania(unittest.TestCase):
     meteo_romania = Defs()
     meteo_romania.load()
     meteo_romania.center_element()
-    meteo_romania.run_pressure()
+    meteo_romania.run_pressures()
     meteo_romania.quit()
 
 if __name__ == "__main__":
