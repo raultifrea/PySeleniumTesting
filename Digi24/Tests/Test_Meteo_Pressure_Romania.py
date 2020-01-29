@@ -3,14 +3,11 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import unittest, os, datetime
 
-from Digi24.Pages.Meteo import Defs
+from Digi24.Pages.Meteo_Romania import Defs
 
 
-class Test_Meteo_Transilvania(unittest.TestCase):
+class TestMeteoPressureRomania(unittest.TestCase):
 
-    pressures_list = []
-    temperatures_list = []
-    winds_list = []
     #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Transilvania')
     os.chdir(r'C:\Users\F73482\Desktop\Meteo')
 
