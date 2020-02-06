@@ -87,7 +87,7 @@ class Test_Meteo_Romania(unittest.TestCase):
             return x
 
         def winds():
-            wind = driver.find_element_by_class_name("wind").text
+            wind = driver.find_element_by_class_name("wind_value").text
             city = driver.find_element_by_class_name("city").text
             if wind =='':
                 wind = 0

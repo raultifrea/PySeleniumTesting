@@ -12,11 +12,12 @@ class Defs:
     GDPR_locator = (By.XPATH, ".//*[@class='gdpr-button gdpr-trigger']")
     Pressure_locator = (By.CLASS_NAME, "atmo")
     City_locator = (By.CLASS_NAME, "city")
-    Wind_locator = (By.CLASS_NAME, "wind")
+    Wind_locator = (By.CLASS_NAME, "wind_value")
     Temperature_locator = (By.CLASS_NAME,"temp")
     Cities_descendant_locator_Romania = (By.XPATH, ".//*[@class ='weather-map weather-map-romania']/descendant::button")
     Cities_descendant_locator_Transilvania = (By.XPATH, ".//*[@class ='weather-map weather-map-transilvania']/descendant::button")
-    Regions_descendant_locator =(By.XPATH, ".//*[@class='dropdown-list-item']/following-sibling::li")
+    Regions_descendant_locator = (By.XPATH, ".//*[@class='dropdown-list-item']/following-sibling::li")
+    Active_Region_locator =(By.XPATH, ".//*[@class='dropdown-list-item-link active']")
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -41,7 +42,11 @@ class Defs:
                 break
 
     def get_Cities_descendants(self, argument): #placeholder argument for the pressures,temperatures,winds methods
-        list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Romania)
+        if self.driver.find_element(*self.Active_Region_locator).text == 'TRANSILVANIA':
+            list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Transilvania)
+        else:
+            print("Romania")
+            list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Romania)
         for element in list_of_elements:
             element.click()
             argument()
@@ -53,6 +58,9 @@ class Defs:
 
     def pressures(self):
         self.pressure_value = self.driver.find_element(*self.Pressure_locator).text
+        if self.pressure_value == '':
+            self.pressure_value = 0
+            print(format(self.city, '*^50'))
         self.psi = str(self.mmHg_to_psi(self.pressure_value))
         self.city = self.driver.find_element(*self.City_locator).text
         print("Presiunea atm in " + self.city + " este " + self.psi + " psi")
@@ -100,16 +108,16 @@ class Defs:
         return x
 
     def winds(self):
-        self.wind = self.driver.find_element(*self.Wind_locator).text
+        self.wind_value = self.driver.find_element(*self.Wind_locator).text
         self.city = self.driver.find_element(*self.City_locator).text
-        if self.wind == '':
-            self.wind = 0
+        if self.wind_value == '':
+            self.wind_value = 0
             print(format(self.city, '*^50'))
-        self.kmh = str(self.ms_to_kmh(self.wind))
+        self.kmh = str(self.ms_to_kmh(self.wind_value))
         print("Viteza vantului din " + self.city + " este " + self.kmh + "km/h")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
             print("Viteza vantului din " + self.city + " este " + self.kmh + "km/h", file=file)
-        if int(self.wind) > -1:
+        if int(self.wind_value) > -1:
             self.winds_list.append(self.kmh)
         else:
             print(format(self.city, '*^50'))
