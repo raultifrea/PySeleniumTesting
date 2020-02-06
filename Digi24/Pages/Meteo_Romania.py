@@ -40,11 +40,11 @@ class Defs:
                 element.click()
                 break
 
-    def get_Cities_descendants(self): #placeholder argument for the pressures,temperatures,winds methods
+    def get_Cities_descendants(self, argument): #placeholder argument for the pressures,temperatures,winds methods
         list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Romania)
         for element in list_of_elements:
             element.click()
-            self.pressures()
+            argument()
 
     def mmHg_to_psi(self, x):  # converting given atm pressure from mmHg to psi
         formula = int(x) / 51.715
@@ -66,7 +66,7 @@ class Defs:
                 print(format(self.city, '*^50'), file=file)
 
     def run_pressures(self):
-        self.get_Cities_descendants()
+        self.get_Cities_descendants(self.pressures)
         self.pressures_list = [float(x) for x in self.pressures_list]
         self.pressure_avg = sum(self.pressures_list) / len(self.pressures_list)
         print("\nMedia presiunii atmosferice din Romania este " + str(("%.2f" % round(self.pressure_avg, 2))) + " psi\n")
@@ -87,7 +87,7 @@ class Defs:
                 print(format(self.city, '*^50'), file=file)
 
     def run_temperatures(self):
-        self.get_Cities_descendants()
+        self.get_Cities_descendants(self.temperatures)
         self.temperatures_list = [int(x) for x in self.temperatures_list]
         self.temp_avg = sum(self.temperatures_list) / len(self.temperatures_list)
         print("\nMedia temperaturii pe Romania este " + str(("%.2f" % round(self.temp_avg, 2))) + "°C\n")
@@ -115,7 +115,7 @@ class Defs:
             print(format(self.city, '*^50'))
 
     def run_winds(self):
-        self.get_Cities_descendants()
+        self.get_Cities_descendants(self.winds)
         self.winds_list = [float(x) for x in self.winds_list]
         self.wind_avg = sum(self.winds_list) / len(self.winds_list)
         print("\nMedia vitezei vantului in Romania este " + str(("%.2f" % round(self.wind_avg, 2))) + " km\h\n")
