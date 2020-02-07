@@ -5,13 +5,12 @@ import unittest
 
 from Digi24.Pages.Meteo_Romania import Defs
 
-
-class TestMeteoPressureTransilvania(unittest.TestCase):
+class TestMeteoPressureCrisana(unittest.TestCase):
 
     meteo_transilvania = Defs()
     meteo_transilvania.load()
-    meteo_transilvania.get_Regions("TRANSILVANIA")
-    meteo_transilvania.run_pressures()
+    meteo_transilvania.get_Regions("CRIȘANA")
+    meteo_transilvania.run_winds()
     meteo_transilvania.quit()
 
 if __name__ == "__main__":

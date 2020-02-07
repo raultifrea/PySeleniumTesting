@@ -8,9 +8,6 @@ from Digi24.Pages.Meteo_Romania import Defs
 
 class TestMeteoPressureRomania(unittest.TestCase):
 
-    #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo')
-    os.chdir(r'C:\Users\F73482\Desktop\Meteo')
-
     meteo_romania = Defs()
     meteo_romania.load()
     meteo_romania.center_element()

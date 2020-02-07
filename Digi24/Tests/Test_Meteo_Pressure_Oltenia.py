@@ -6,11 +6,11 @@ import unittest
 from Digi24.Pages.Meteo_Romania import Defs
 
 
-class TestMeteoPressureTransilvania(unittest.TestCase):
+class TestMeteoPressureOltenia(unittest.TestCase):
 
     meteo_transilvania = Defs()
     meteo_transilvania.load()
-    meteo_transilvania.get_Regions("TRANSILVANIA")
+    meteo_transilvania.get_Regions("OLTENIA")
     meteo_transilvania.run_pressures()
     meteo_transilvania.quit()
 
