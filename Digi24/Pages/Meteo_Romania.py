@@ -45,7 +45,6 @@ class Defs:
         if self.driver.find_element(*self.Active_Region_locator).text == 'TRANSILVANIA':
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Transilvania)
         else:
-            print("Romania")
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Romania)
         for element in list_of_elements:
             element.click()
@@ -58,20 +57,21 @@ class Defs:
 
     def pressures(self):
         self.pressure_value = self.driver.find_element(*self.Pressure_locator).text
+        self.city = self.driver.find_element(*self.City_locator).text
         if self.pressure_value == '':
             self.pressure_value = 0
             print(format(self.city, '*^50'))
-        self.psi = str(self.mmHg_to_psi(self.pressure_value))
-        self.city = self.driver.find_element(*self.City_locator).text
-        print("Presiunea atm in " + self.city + " este " + self.psi + " psi")
-        with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
-            print("Presiunea atm in " + self.city + " este " + self.psi + " psi", file=file)
-        if 700 < int(self.pressure_value) < 800:
-            self.pressures_list.append(self.psi)
         else:
-            print(format(self.city, '*^50'))
+            self.psi = str(self.mmHg_to_psi(self.pressure_value))
+            print("Presiunea atm in " + self.city + " este " + self.psi + " psi")
             with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
-                print(format(self.city, '*^50'), file=file)
+                print("Presiunea atm in " + self.city + " este " + self.psi + " psi", file=file)
+            if 700 < int(self.pressure_value) < 800:
+                self.pressures_list.append(self.psi)
+            else:
+                print(format(self.city, '*^50'))
+                with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
+                    print(format(self.city, '*^50'), file=file)
 
     def run_pressures(self):
         self.get_Cities_descendants(self.pressures)
