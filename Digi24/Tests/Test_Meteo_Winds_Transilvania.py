@@ -5,7 +5,6 @@ import unittest
 
 from Digi24.Pages.Meteo_Romania import Defs
 
-
 class TestMeteoWindsTransilvania(unittest.TestCase):
 
     meteo_transilvania = Defs()

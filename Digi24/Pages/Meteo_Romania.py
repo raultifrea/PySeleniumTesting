@@ -37,7 +37,6 @@ class Defs:
         self.driver.execute_script("window.scrollTo(0, 200)")
 
     def load(self):
-
         self.driver.maximize_window()
         self.driver.get(self.URL)
         self.driver.find_element(*self.GDPR_locator).click()
@@ -50,35 +49,36 @@ class Defs:
                 break
 
     def get_Cities_descendants(self, argument): #placeholder argument for the pressures,temperatures,winds methods
-        if self.driver.find_element(*self.Active_Region_locator).text == 'TRANSILVANIA':
+        self.active_region = self.driver.find_element(*self.Active_Region_locator).text
+        if self.active_region == 'TRANSILVANIA':
             #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Transilvania')
             os.chdir(r'C:\Users\F73482\Desktop\Meteo\Transilvania')
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Transilvania)
-        elif self.driver.find_element(*self.Active_Region_locator).text == 'BANAT':
+        elif self.active_region == 'BANAT':
             #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Banat')
             os.chdir(r'C:\Users\F73482\Desktop\Meteo\Banat')
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Banat)
-        elif self.driver.find_element(*self.Active_Region_locator).text == 'CRIȘANA':
+        elif self.active_region == 'CRIȘANA':
             #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Crisana')
             os.chdir(r'C:\Users\F73482\Desktop\Meteo\Crisana')
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Crisana)
-        elif self.driver.find_element(*self.Active_Region_locator).text == 'MARAMUREȘ':
+        elif self.active_region == 'MARAMUREȘ':
             #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Maramures')
             os.chdir(r'C:\Users\F73482\Desktop\Meteo\Maramures')
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Maramures)
-        elif self.driver.find_element(*self.Active_Region_locator).text == 'DOBROGEA':
+        elif self.active_region == 'DOBROGEA':
             #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Dobrogea')
             os.chdir(r'C:\Users\F73482\Desktop\Meteo\Dobrogea')
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Dobrogea)
-        elif self.driver.find_element(*self.Active_Region_locator).text == 'OLTENIA':
+        elif self.active_region == 'OLTENIA':
             #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Oltenia')
             os.chdir(r'C:\Users\F73482\Desktop\Meteo\Oltenia')
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Oltenia)
-        elif self.driver.find_element(*self.Active_Region_locator).text == 'MUNTENIA':
+        elif self.active_region == 'MUNTENIA':
             #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Muntenia')
             os.chdir(r'C:\Users\F73482\Desktop\Meteo\Muntenia')
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Muntenia)
-        elif self.driver.find_element(*self.Active_Region_locator).text == 'MOLDOVA':
+        elif self.active_region == 'MOLDOVA':
             #os.chdir(r'C:\Users\tzifrea\Desktop\Meteo\Moldova')
             os.chdir(r'C:\Users\F73482\Desktop\Meteo\Moldova')
             list_of_elements = self.driver.find_elements(*self.Cities_descendant_locator_Moldova)
@@ -105,9 +105,9 @@ class Defs:
                 print(format(self.city, '*^50'), file=file)
         else:
             self.psi = str(self.mmHg_to_psi(self.pressure_value))
-            print("Presiunea atm in " + self.city + " este " + self.psi + " psi")
+            print("Presiunea atm în " + self.city + " este " + self.psi + " psi")
             with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
-                print("Presiunea atm in " + self.city + " este " + self.psi + " psi", file=file)
+                print("Presiunea atm în " + self.city + " este " + self.psi + " psi", file=file)
             if 700 < int(self.pressure_value) < 800:
                 self.pressures_list.append(self.psi)
             else:
@@ -119,9 +119,9 @@ class Defs:
         self.get_Cities_descendants(self.pressures)
         self.pressures_list = [float(x) for x in self.pressures_list]
         self.pressure_avg = sum(self.pressures_list) / len(self.pressures_list)
-        print("\nMedia presiunii atmosferice este " + str(("%.2f" % round(self.pressure_avg, 2))) + " psi\n")
+        print("\nMedia presiunii atmosferice din " + self.active_region + " este " + str(("%.2f" % round(self.pressure_avg, 2))) + " psi\n")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
-            print("\nMedia presiunii atmosferice este " + str(("%.2f" % round(self.pressure_avg, 2))) + " psi\n", file=file)
+            print("\nMedia presiunii atmosferice din " + self.active_region + " este " + str(("%.2f" % round(self.pressure_avg, 2))) + " psi\n", file=file)
 
     def temperatures(self):
         self.temperature_value = self.driver.find_element(*self.Temperature_locator).text
@@ -140,9 +140,9 @@ class Defs:
         self.get_Cities_descendants(self.temperatures)
         self.temperatures_list = [int(x) for x in self.temperatures_list]
         self.temp_avg = sum(self.temperatures_list) / len(self.temperatures_list)
-        print("\nMedia temperaturii este " + str(("%.2f" % round(self.temp_avg, 2))) + "°C\n")
+        print("\nMedia temperaturii din " + self.active_region + " este " + str(("%.2f" % round(self.temp_avg, 2))) + "°C\n")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
-            print("\nMedia temperaturii este " + str(("%.2f" % round(self.temp_avg, 2))) + "°C\n", file=file)
+            print("\nMedia temperaturii din " + self.active_region + " este " + str(("%.2f" % round(self.temp_avg, 2))) + "°C\n", file=file)
 
     def ms_to_kmh(self, x):
         formula = int(x) * 3.6
@@ -156,9 +156,9 @@ class Defs:
             self.wind_value = 0
             print(format(self.city, '*^50'))
         self.kmh = str(self.ms_to_kmh(self.wind_value))
-        print("Viteza vantului din " + self.city + " este " + self.kmh + "km/h")
+        print("Viteza vântului din " + self.city + " este " + self.kmh + "km/h")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
-            print("Viteza vantului din " + self.city + " este " + self.kmh + "km/h", file=file)
+            print("Viteza vântului din " + self.city + " este " + self.kmh + "km/h", file=file)
         if int(self.wind_value) > -1:
             self.winds_list.append(self.kmh)
         else:
@@ -168,9 +168,9 @@ class Defs:
         self.get_Cities_descendants(self.winds)
         self.winds_list = [float(x) for x in self.winds_list]
         self.wind_avg = sum(self.winds_list) / len(self.winds_list)
-        print("\nMedia vitezei vantului este " + str(("%.2f" % round(self.wind_avg, 2))) + " km\h\n")
+        print("\nMedia vitezei vântului din " + self.active_region + " este " + str(("%.2f" % round(self.wind_avg, 2))) + " km/h\n")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
-            print("\nMedia vitezei vantului este " + str(("%.2f" % round(self.wind_avg, 2))) + " km\h\n",
+            print("\nMedia vitezei vântului din " + self.active_region + " este " + str(("%.2f" % round(self.wind_avg, 2))) + " km/h\n",
                   file=file)
 
     def quit(self):
