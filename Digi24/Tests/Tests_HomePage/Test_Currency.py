@@ -6,7 +6,8 @@ class TestCurrency(unittest.TestCase):
 
     currency = Defs()
     currency.load()
-    currency.get_header_name()
+    currency.get_currency_header_name()
+    currency.get_currency_values()
     currency.quit()
 
 if __name__ == "__main__":
