@@ -1,6 +1,8 @@
 import unittest
 
-from personalprojects.Digi24.Pages.Digi24_Home import Defs
+#from personalprojects.Digi24.Pages.Digi24_Home import Defs
+from Digi24.Pages.Digi24_Home import Defs
+
 
 class TestCurrency(unittest.TestCase):
 

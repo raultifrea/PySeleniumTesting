@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import unittest
 
-from Digi24.Pages.Meteo_Romania import Defs
+from Digi24.Pages.Digi24_Meteo import Defs
 
 
 class TestMeteoTemperatureMaramures(unittest.TestCase):
