@@ -3,6 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import os, datetime
 
+from Digi24.Components.HomePage import original_list_of_nav_menu_items
+
 class Defs:
     URL = 'https://www.digi24.ro'
     GDPR_locator = (By.XPATH, ".//*[@class='gdpr-button gdpr-trigger']")
@@ -13,7 +15,10 @@ class Defs:
     Weather_temp_locator = (By.XPATH, ".//*[@class='widget-weather-location-temp']")
     Weather_pressure_locator = (By.XPATH, ".//*[@class='widget-weather-details']//descendant::dd")
     Weather_wind_locator = (By.XPATH, ".//*[@class='widget-weather-details']//descendant::dd[2]")
-    Article_title_locator = (By.XPATH, ".//*[@class='article-title']//a")
+    Article_title_locator = (By.XPATH, ".//*[@class='article-title' or @class='section-title']") #sections included
+    Section_title_locator = (By.XPATH, ".//*[@class='section-title']")
+    Nav_Menu_Submenu_links_locator = (By.XPATH, ".//*[@class='nav-submenu-link' or @class='nav-menu-list-item-link']")
+    Nav_Menu_button_locator = (By.XPATH, ".//*[@class='nav-list-item-link nav-trigger']")
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -69,14 +74,34 @@ class Defs:
         assert len(self.wind) > 0, "No value present for temperature"
 
     def get_articles_titles(self):
-        # os.chdir(r'C:\Users\tzifrea\Desktop\HomePage\Currency')
+        list_of_sections = self.driver.find_elements(*self.Section_title_locator)
+        #os.chdir(r'C:\Users\tzifrea\Desktop\HomePage\Articles')
         os.chdir(r'C:\Users\F73482\Desktop\HomePage\Articles')
+        open(self.current_day + ".txt", 'w').close()
         list_of_articles_titles = self.driver.find_elements(*self.Article_title_locator)
         for elem in list_of_articles_titles:
             print(elem.text)
             with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
                 print(elem.text, file=file)
             assert len(elem.text) > 0, str(elem) + "Article title is empty"
+        print("\n"+"Number of articles is: "+str(len(list_of_articles_titles)-len(list_of_sections)))
+        with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
+            print("\n" + "Number of articles is: " + str(len(list_of_articles_titles)), file=file)
+
+    def click_Nav_Menu_button(self):
+        return self.driver.find_element(*self.Nav_Menu_button_locator).click()
+
+    def get_nav_menu_links(self):
+        #os.chdir(r'C:\Users\tzifrea\Desktop\HomePage\NavMenu')
+        os.chdir(r'C:\Users\F73482\Desktop\HomePage\NavMenu')
+        open(self.current_day + ".txt", 'w').close()
+        list_of_nav_menu_items = self.driver.find_elements(*self.Nav_Menu_Submenu_links_locator)
+        for elem in list_of_nav_menu_items:
+            print(elem.text)
+            with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
+                print(elem.text, file=file)
+        list_of_nav_menu_items = [x.text for x in list_of_nav_menu_items]
+        assert list_of_nav_menu_items == original_list_of_nav_menu_items, "Lists not identical"
 
     def quit(self):
         self.driver.quit()

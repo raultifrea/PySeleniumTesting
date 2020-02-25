@@ -25,6 +25,7 @@ class Defs:
     Cities_descendant_locator_Moldova = (By.XPATH, ".//*[@class ='weather-map weather-map-moldova']/descendant::button")
     Regions_descendant_locator = (By.XPATH, ".//*[@class='dropdown-list-item']/following-sibling::li")
     Active_Region_locator = (By.XPATH, ".//*[@class='dropdown-list-item-link active']")
+    #Ad_locator = (By.XPATH, ".//*[@class='amp-animate amp-mode-mouse']")
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -40,6 +41,7 @@ class Defs:
         self.driver.maximize_window()
         self.driver.get(self.URL)
         self.driver.find_element(*self.GDPR_locator).click()
+        #WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.driver.find_element(*self.Ad_locator)))
 
     def get_Regions(self, region):
         list_of_regions = self.driver.find_elements(*self.Regions_descendant_locator)
