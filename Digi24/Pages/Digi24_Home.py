@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import os, datetime
-
 from Digi24.Components.HomePage import original_list_of_nav_menu_items
 
 class Defs:
@@ -33,18 +33,18 @@ class Defs:
         #os.chdir(r'C:\Users\tzifrea\Desktop\HomePage\Currency')
         os.chdir(r'C:\Users\F73482\Desktop\HomePage\Currency')
         self.currency_header = self.driver.find_element(*self.Currency_header_locator).text
-        print(self.currency_header+'\n')
         with open(self.current_day + ".txt", "w", encoding="utf-8") as file:
             print(self.currency_header+'\n', file=file)
         assert self.currency_header == "CURS VALUTAR", "Incorrect weather header tittle"
 
+
     def get_currency_values(self):
         list_of_currencies = self.driver.find_elements(*self.Currency_type_locator)
         for elem in list_of_currencies:
-            print(elem.text)
             with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
                 print(elem.text, file=file)
             assert len(elem.text) > 0, "No value for currency"
+        os.chdir(r'D:')
 
     def get_weather_header_name(self):
         #os.chdir(r'C:\Users\tzifrea\Desktop\HomePage\Weather')
@@ -60,10 +60,6 @@ class Defs:
         self.temp = self.driver.find_element(*self.Weather_temp_locator).text
         self.pressure = self.driver.find_element(*self.Weather_pressure_locator).text
         self.wind = self.driver.find_element(*self.Weather_wind_locator).text
-        print("Valorile vremii in "+self.city+" sunt:"+'\n'+
-              "• Temperatura = "+self.temp+'\n'+
-              "• Presiunea = "+self.pressure+'\n'+
-              "• Vântul = "+self.wind+'\n')
         with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
             print("Valorile vremii in " + self.city + " sunt:" + '\n' +
                   "• Temperatura = " + self.temp + '\n' +
@@ -72,6 +68,7 @@ class Defs:
         assert len(self.temp) > 0, "No value present for temperature"
         assert len(self.pressure) > 0, "No value present for temperature"
         assert len(self.wind) > 0, "No value present for temperature"
+        os.chdir(r'D:')
 
     def get_articles_titles(self):
         list_of_sections = self.driver.find_elements(*self.Section_title_locator)
@@ -80,13 +77,14 @@ class Defs:
         open(self.current_day + ".txt", 'w').close()
         list_of_articles_titles = self.driver.find_elements(*self.Article_title_locator)
         for elem in list_of_articles_titles:
-            print(elem.text)
+            #print(elem.text)
             with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
                 print(elem.text, file=file)
             assert len(elem.text) > 0, str(elem) + "Article title is empty"
-        print("\n"+"Number of articles is: "+str(len(list_of_articles_titles)-len(list_of_sections)))
+        #print("\n"+"Number of articles is: "+str(len(list_of_articles_titles)-len(list_of_sections)))
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
             print("\n" + "Number of articles is: " + str(len(list_of_articles_titles)), file=file)
+        os.chdir(r'D:')
 
     def click_Nav_Menu_button(self):
         return self.driver.find_element(*self.Nav_Menu_button_locator).click()
@@ -97,11 +95,11 @@ class Defs:
         open(self.current_day + ".txt", 'w').close()
         list_of_nav_menu_items = self.driver.find_elements(*self.Nav_Menu_Submenu_links_locator)
         for elem in list_of_nav_menu_items:
-            print(elem.text)
             with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
                 print(elem.text, file=file)
         list_of_nav_menu_items = [x.text for x in list_of_nav_menu_items]
         assert list_of_nav_menu_items == original_list_of_nav_menu_items, "Lists not identical"
+        os.chdir(r'D:')
 
     def quit(self):
         self.driver.quit()

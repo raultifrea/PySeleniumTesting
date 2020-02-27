@@ -1,4 +1,4 @@
-import unittest
+import unittest, HtmlTestRunner
 
 #from personalprojects.Digi24.Pages.Digi24_Home import Defs
 from Digi24.Pages.Digi24_Home import Defs
@@ -6,11 +6,12 @@ from Digi24.Pages.Digi24_Home import Defs
 
 class TestCurrency(unittest.TestCase):
 
-    currency = Defs()
-    currency.load()
-    currency.get_currency_header_name()
-    currency.get_currency_values()
-    currency.quit()
+    def test_currency(self):
+        currency = Defs()
+        currency.load()
+        currency.get_currency_header_name()
+        currency.get_currency_values()
+        currency.quit()
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output=r'D:\Automation\personalprojects\Digi24\Reports'))

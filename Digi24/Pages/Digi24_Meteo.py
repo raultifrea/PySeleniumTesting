@@ -41,7 +41,6 @@ class Defs:
         self.driver.maximize_window()
         self.driver.get(self.URL)
         self.driver.find_element(*self.GDPR_locator).click()
-        #WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(self.driver.find_element(*self.Ad_locator)))
 
     def get_Regions(self, region):
         list_of_regions = self.driver.find_elements(*self.Regions_descendant_locator)

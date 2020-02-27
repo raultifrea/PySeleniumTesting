@@ -7,12 +7,12 @@ from Digi24.Pages.Digi24_Meteo import Defs
 
 
 class TestMeteoWindsMoldova(unittest.TestCase):
-
-    meteo_transilvania = Defs()
-    meteo_transilvania.load()
-    meteo_transilvania.get_Regions("MOLDOVA")
-    meteo_transilvania.run_winds()
-    meteo_transilvania.quit()
+    def test_meteo_winds_Moldova(self):
+        meteo_transilvania = Defs()
+        meteo_transilvania.load()
+        meteo_transilvania.get_Regions("MOLDOVA")
+        meteo_transilvania.run_winds()
+        meteo_transilvania.quit()
 
 if __name__ == "__main__":
     unittest.main()
