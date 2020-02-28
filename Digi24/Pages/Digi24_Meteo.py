@@ -101,18 +101,15 @@ class Defs:
         self.city = self.driver.find_element(*self.City_locator).text
         if self.pressure_value == '':
             self.pressure_value = 0
-            print(format(self.city, '*^50'))
             with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
                 print(format(self.city, '*^50'), file=file)
         else:
             self.psi = str(self.mmHg_to_psi(self.pressure_value))
-            print("Presiunea atm în " + self.city + " este " + self.psi + " psi")
             with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
                 print("Presiunea atm în " + self.city + " este " + self.psi + " psi", file=file)
             if 700 < int(self.pressure_value) < 800:
                 self.pressures_list.append(self.psi)
             else:
-                print(format(self.city, '*^50'))
                 with open(self.current_day + ".txt", 'a+', encoding="utf-8") as file:
                     print(format(self.city, '*^50'), file=file)
 
@@ -120,20 +117,18 @@ class Defs:
         self.get_Cities_descendants(self.pressures)
         self.pressures_list = [float(x) for x in self.pressures_list]
         self.pressure_avg = sum(self.pressures_list) / len(self.pressures_list)
-        print("\nMedia presiunii atmosferice din " + self.active_region + " este " + str(("%.2f" % round(self.pressure_avg, 2))) + " psi\n")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
             print("\nMedia presiunii atmosferice din " + self.active_region + " este " + str(("%.2f" % round(self.pressure_avg, 2))) + " psi\n", file=file)
+        os.chdir(r'D:')
 
     def temperatures(self):
         self.temperature_value = self.driver.find_element(*self.Temperature_locator).text
         self.city = self.driver.find_element(*self.City_locator).text
-        print("Temperatura din " + self.city + " este " + self.temperature_value + "°C")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
             print("Temperatura din " +self.city + " este " + self.temperature_value + "°C", file=file)
         if len(self.temperature_value) > 0:
             self.temperatures_list.append(self.temperature_value)
         else:
-            print(format(self.city, '*^50'))
             with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
                 print(format(self.city, '*^50'), file=file)
 
@@ -141,9 +136,9 @@ class Defs:
         self.get_Cities_descendants(self.temperatures)
         self.temperatures_list = [int(x) for x in self.temperatures_list]
         self.temp_avg = sum(self.temperatures_list) / len(self.temperatures_list)
-        print("\nMedia temperaturii din " + self.active_region + " este " + str(("%.2f" % round(self.temp_avg, 2))) + "°C\n")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
             print("\nMedia temperaturii din " + self.active_region + " este " + str(("%.2f" % round(self.temp_avg, 2))) + "°C\n", file=file)
+        os.chdir(r'D:')
 
     def ms_to_kmh(self, x):
         formula = int(x) * 3.6
@@ -155,24 +150,22 @@ class Defs:
         self.city = self.driver.find_element(*self.City_locator).text
         if self.wind_value == '':
             self.wind_value = 0
-            print(format(self.city, '*^50'))
         self.kmh = str(self.ms_to_kmh(self.wind_value))
-        print("Viteza vântului din " + self.city + " este " + self.kmh + "km/h")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
             print("Viteza vântului din " + self.city + " este " + self.kmh + "km/h", file=file)
         if int(self.wind_value) > -1:
             self.winds_list.append(self.kmh)
         else:
-            print(format(self.city, '*^50'))
+            with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
+                print(format(self.city, '*^50'), file=file)
 
     def run_winds(self):
         self.get_Cities_descendants(self.winds)
         self.winds_list = [float(x) for x in self.winds_list]
         self.wind_avg = sum(self.winds_list) / len(self.winds_list)
-        print("\nMedia vitezei vântului din " + self.active_region + " este " + str(("%.2f" % round(self.wind_avg, 2))) + " km/h\n")
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
-            print("\nMedia vitezei vântului din " + self.active_region + " este " + str(("%.2f" % round(self.wind_avg, 2))) + " km/h\n",
-                  file=file)
+            print("\nMedia vitezei vântului din " + self.active_region + " este " + str(("%.2f" % round(self.wind_avg, 2))) + " km/h\n", file=file)
+        os.chdir(r'D:')
 
     def quit(self):
         self.driver.quit()

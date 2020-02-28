@@ -1,5 +1,6 @@
 import unittest, HtmlTestRunner, os
 #from personalprojects.Digi24.Pages.Digi24_Home import Defs
+from Digi24.Components.Report_Path import report_path_homepage_workbench
 from Digi24.Pages.Digi24_Home import Defs
 
 class TestArticlesTitles(unittest.TestCase):
@@ -13,8 +14,4 @@ class TestArticlesTitles(unittest.TestCase):
 
 
 if __name__ == "__main__":
-
-    #path = r'\personalprojects\Digi24\Reports'
-    #start = r'D:\Automation'
-    #relpath = os.path.relpath(path, start)
-    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output=r'D:\Automation\personalprojects\Digi24\Reports'))
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output=report_path_homepage_workbench))

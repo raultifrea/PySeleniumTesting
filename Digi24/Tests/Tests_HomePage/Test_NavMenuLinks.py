@@ -1,6 +1,7 @@
 import unittest, HtmlTestRunner
 
 #from personalprojects.Digi24.Pages.Digi24_Home import Defs
+from Digi24.Components.Report_Path import report_path_homepage_workbench
 from Digi24.Pages.Digi24_Home import Defs
 
 class TestNavMenuLinks(unittest.TestCase):
@@ -13,4 +14,4 @@ class TestNavMenuLinks(unittest.TestCase):
         navMenuLinks.quit()
 
 if __name__ == "__main__":
-    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output=r'D:\Automation\personalprojects\Digi24\Reports'))
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output=report_path_homepage_workbench))

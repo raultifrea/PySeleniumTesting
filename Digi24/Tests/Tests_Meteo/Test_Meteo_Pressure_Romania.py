@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
-import unittest, os, datetime
+import unittest, HtmlTestRunner
+from Digi24.Components.Report_Path import report_path_meteo_workbench
+from Digi24.Pages.Digi24_Meteo import Defs
 
 from Digi24.Pages.Digi24_Meteo import Defs
 
@@ -15,6 +15,6 @@ class TestMeteoPressureRomania(unittest.TestCase):
         meteo_romania.quit()
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output=report_path_meteo_workbench))
 
 
