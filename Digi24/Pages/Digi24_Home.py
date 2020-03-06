@@ -50,7 +50,6 @@ class Defs:
         #os.chdir(r'C:\Users\tzifrea\Desktop\HomePage\Weather')
         os.chdir(r'C:\Users\F73482\Desktop\HomePage\Weather')
         self.weather_header = self.driver.find_element(*self.Weather_header_locator).text
-        print(self.weather_header+'\n')
         with open(self.current_day + ".txt", "w", encoding="utf-8") as file:
             print(self.weather_header+'\n', file=file)
         assert self.weather_header == "VREMEA", "Incorrect weather header tittle"
@@ -77,7 +76,6 @@ class Defs:
         open(self.current_day + ".txt", 'w').close()
         list_of_articles_titles = self.driver.find_elements(*self.Article_title_locator)
         for elem in list_of_articles_titles:
-            #print(elem.text)
             with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
                 print(elem.text, file=file)
             assert len(elem.text) > 0, str(elem) + "Article title is empty"
