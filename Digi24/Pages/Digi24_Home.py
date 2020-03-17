@@ -3,7 +3,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import os, datetime
-from Digi24.Components.HomePage import original_list_of_nav_menu_items
+from Digi24.Components.HomePage import original_list_of_nav_menu_items, original_set_of_days_of_the_week
 
 class Defs:
     URL = 'https://www.digi24.ro'
@@ -19,6 +19,7 @@ class Defs:
     Section_title_locator = (By.XPATH, ".//*[@class='section-title']")
     Nav_Menu_Submenu_links_locator = (By.XPATH, ".//*[@class='nav-submenu-link' or @class='nav-menu-list-item-link']")
     Nav_Menu_button_locator = (By.XPATH, ".//*[@class='nav-list-item-link nav-trigger']")
+    Recommendations_days_locator = (By.XPATH, "//*[contains(@class,'widget-digi-online-schedule-tab-item')]")
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -36,7 +37,6 @@ class Defs:
         with open(self.current_day + ".txt", "w", encoding="utf-8") as file:
             print(self.currency_header+'\n', file=file)
         assert self.currency_header == "CURS VALUTAR", "Incorrect weather header tittle"
-
 
     def get_currency_values(self):
         list_of_currencies = self.driver.find_elements(*self.Currency_type_locator)
@@ -79,7 +79,6 @@ class Defs:
             with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
                 print(elem.text, file=file)
             assert len(elem.text) > 0, str(elem) + "Article title is empty"
-        #print("\n"+"Number of articles is: "+str(len(list_of_articles_titles)-len(list_of_sections)))
         with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
             print("\n" + "Number of articles is: " + str(len(list_of_articles_titles)), file=file)
         os.chdir(r'D:')
@@ -91,13 +90,21 @@ class Defs:
         #os.chdir(r'C:\Users\tzifrea\Desktop\HomePage\NavMenu')
         os.chdir(r'C:\Users\F73482\Desktop\HomePage\NavMenu')
         open(self.current_day + ".txt", 'w').close()
-        list_of_nav_menu_items = self.driver.find_elements(*self.Nav_Menu_Submenu_links_locator)
+        list_of_nav_menu_items = [x.text for x in self.driver.find_elements(*self.Nav_Menu_Submenu_links_locator)]
         for elem in list_of_nav_menu_items:
             with open(self.current_day + ".txt", "a+", encoding="utf-8") as file:
-                print(elem.text, file=file)
-        list_of_nav_menu_items = [x.text for x in list_of_nav_menu_items]
+                print(elem, file=file)
         assert list_of_nav_menu_items == original_list_of_nav_menu_items, "Lists not identical"
         os.chdir(r'D:')
+
+    def get_days_of_the_week(self):
+        list_of_days_of_the_week = [x.text for x in self.driver.find_elements(*self.Recommendations_days_locator)]
+        assert set(list_of_days_of_the_week) == original_set_of_days_of_the_week, "List not identical"
+
+    def click_days_of_the_week(self):
+        list_of_days_of_the_week = self.driver.find_elements(*self.Recommendations_days_locator)
+        for element in list_of_days_of_the_week:
+            element.click()
 
     def quit(self):
         self.driver.quit()
