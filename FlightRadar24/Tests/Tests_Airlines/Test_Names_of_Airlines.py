@@ -1,10 +1,10 @@
 from FlightRadar24.Pages.Airlines import Defs
 import unittest
 
-class TestAvgNbAircraft(unittest.TestCase):
+class Test_Names_of_Airlines(unittest.TestCase):
 
-    def testAvgNbAircraft(self):
+    def test_name_of_Airlines(self):
         test = Defs()
         test.load()
-        test.get_average_nb_aircrafts()
+        test.get_names_of_airlines()
         test.quit()
