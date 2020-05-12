@@ -1,7 +1,7 @@
 from FlightRadar24.Pages.Map import Defs
 import unittest
 
-class TestURL(unittest.TestCase):
+class TestLogin(unittest.TestCase):
 
     def testURL(self):
         test = Defs()
