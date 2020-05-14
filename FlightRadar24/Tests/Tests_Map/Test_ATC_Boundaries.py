@@ -2,12 +2,12 @@ from FlightRadar24.Pages.Map import Defs
 import unittest, time
 
 
-class TestMapStyles(unittest.TestCase):
+class TestATCBoundaries(unittest.TestCase):
 
-    def testMapStyles(self):
+    def testATCBoundaries(self):
         test = Defs()
         test.load()
         test.click_settings_button()
-        test.check_map_style_functionality("Hybrid")
+        test.check_atc_boundaries_functionality("None")
         time.sleep(3)
         test.quit()
