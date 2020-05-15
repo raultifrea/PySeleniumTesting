@@ -13,7 +13,7 @@ class Defs:
     SignIn_locator = (By.XPATH, "//*[@id='fr24_SignIn']")
     Login_text_locator = (By.XPATH, "//*[contains(text(),'Login authorization succeeded')]")
     Settings_button_locator = (By.XPATH, "//*[@id='fr24_SettingsMenu']")
-    Settings_Map_MapStyle_dropdown_locator = (By.XPATH, "//*[@class='btn btn-default dropdown-toggle pull-right']")
+    Settings_Map_MapStyle_dropdown_locator = (By.XPATH, '//*[@id="fr24_mapType"]/button')
     Settings_Map_MapStyle_list_locator = (By.XPATH, "//*[@id='fr24_mapType']//descendant::a")
     Settings_Map_ATCBoundaries_dropdown_locator = (By.XPATH, '//*[@id="fr24_showATC"]/button')
     Settings_Map_ATCBoundaries_list_locator = (By.XPATH, '//*[@id="fr24_showATC"]//descendant::a')
@@ -22,6 +22,7 @@ class Defs:
     Settings_Map_toggles_locator = (By.XPATH, "//*[@id='mapsettings']//div[contains(@class,'toggle')]")
     Settings_Map_airport_pin_visibility_slidebar_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/div')
     Settings_Map_airport_pin_visibility_slider_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/a')
+    Settings_dropdown_default_values_locator = (By.XPATH, "//button[@data-toggle='dropdown']")
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -103,6 +104,24 @@ class Defs:
     def click_settings_button(self):
         self.settings_button.click()
 
+    def get_list_of_default_dropdown_values(self):
+        #returns a list of the default drop-down web elements from the Settings menu
+        return self.driver.find_elements(*self.Settings_dropdown_default_values_locator)
+
+    def get_list_of_default_dropdown_values_strings(self):
+        #returns a list of the default drop-down strings from the Settings menu
+        return [element.text for element in self.get_list_of_default_dropdown_values()]
+
+    def check_dropdown_functionality(self, the_list, option: str):
+        #checks whether the selected dropdown value is saved in the header
+        self.click_selected_dropdown_value(the_list(), option)
+        assert option in self.get_list_of_default_dropdown_values_strings(), f"option: {option} is not saved correctly"
+
+    def click_selected_dropdown_value(self, the_list: list, option: str):
+        for element in the_list:
+            if element.text == option:
+                element.click()
+
     @property
     def map_style_button(self):
         return self.driver.find_element(*self.Settings_Map_MapStyle_dropdown_locator)
@@ -114,17 +133,6 @@ class Defs:
         #returns a list of dropdown values from the Map Style options of the Map tab
         return self.driver.find_elements(*self.Settings_Map_MapStyle_list_locator)
 
-    def check_map_style_functionality(self, option: str):
-        #checks whether the selected map style name from the dropdown list is saved in the header
-        self.click_map_style_button()
-        self.click_selected_dropdown_value(self.get_list_of_map_styles(), option)
-        assert self.map_style_button.text == option, "Map Style option is not saved correctly"
-
-    def click_selected_dropdown_value(self, the_list: list, option: str):
-        for element in the_list:
-            if element.text == option:
-                element.click()
-
     @property
     def atc_boundaries_button(self):
         return self.driver.find_element(*self.Settings_Map_ATCBoundaries_dropdown_locator)
@@ -135,12 +143,6 @@ class Defs:
     def get_list_of_atc_boundaries(self):
         #returns a list of dropdown values from the ATC Boundaries of the Map tab
         return self.driver.find_elements(*self.Settings_Map_ATCBoundaries_list_locator)
-
-    def check_atc_boundaries_functionality(self, option: str):
-        #checks whether the selected atc boundary name from the dropdown list is saved in the header
-        self.click_atc_boundaries_button()
-        self.click_selected_dropdown_value(self.get_list_of_atc_boundaries(), option)
-        assert self.atc_boundaries_button.text == option, "ATC Boundary option is not saved correctly"
 
     def get_list_of_toggles(self):
         return self.driver.find_elements(*self.Settings_Map_toggles_locator)
