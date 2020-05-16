@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 import time
 
 
@@ -17,15 +19,22 @@ class Defs:
     Settings_Map_MapStyle_list_locator = (By.XPATH, "//*[@id='fr24_mapType']//descendant::a")
     Settings_Map_ATCBoundaries_dropdown_locator = (By.XPATH, '//*[@id="fr24_showATC"]/button')
     Settings_Map_ATCBoundaries_list_locator = (By.XPATH, '//*[@id="fr24_showATC"]//descendant::a')
+    Settings_Map_Aeronautical_Charts_dropdown_locator = (By.XPATH, '//*[@id="fr24_showNavdataLayer"]/button')
+    Settings_Map_Aeronautical_Charts_list_locator = (By.XPATH, '//*[@id="fr24_showNavdataLayer"]//descendant::a')
     Settings_Map_Brightness_slidebar_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/div')
     Settings_Map_Brightness_slider_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/a')
     Settings_Map_toggles_locator = (By.XPATH, "//*[@id='mapsettings']//div[contains(@class,'toggle')]")
     Settings_Map_airport_pin_visibility_slidebar_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/div')
     Settings_Map_airport_pin_visibility_slider_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/a')
     Settings_dropdown_default_values_locator = (By.XPATH, "//button[@data-toggle='dropdown']")
+    iframe_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/iframe')
+    subscription_plan_locator = (By.XPATH, "//*[@class='subscription']")
 
     def __init__(self):
         self.driver = webdriver.Chrome()
+
+    def switch_to_frame(self):
+        self.driver.switch_to.frame(2)
 
     @property
     def brigthness_button_slidebar(self):
@@ -144,6 +153,17 @@ class Defs:
         #returns a list of dropdown values from the ATC Boundaries of the Map tab
         return self.driver.find_elements(*self.Settings_Map_ATCBoundaries_list_locator)
 
+    @property
+    def aeronautical_charts_button(self):
+        return self.driver.find_element(*self.Settings_Map_Aeronautical_Charts_dropdown_locator)
+
+    def click_aeronautical_charts_button(self):
+        self.aeronautical_charts_button.click()
+
+    def get_list_of_aeronautical_charts(self):
+        #returns a list of dropdown values from the Aeronautical Charts of the Map tab
+        return self.driver.find_elements(*self.Settings_Map_Aeronautical_Charts_list_locator)
+
     def get_list_of_toggles(self):
         return self.driver.find_elements(*self.Settings_Map_toggles_locator)
 
@@ -166,7 +186,9 @@ class Defs:
         self.send_keys_password_button("nokianseries")
         self.click_sign_in_button()
 
-
+    def wait_for_login_refresh(self):
+        #waits up to 10 seconds for the subscription to be updated after login. Can be change to accept dynamic argument
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.subscription_plan_locator))
 
     def quit(self):
         self.driver.quit()

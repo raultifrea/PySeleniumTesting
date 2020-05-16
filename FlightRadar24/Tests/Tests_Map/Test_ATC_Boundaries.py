@@ -6,9 +6,10 @@ class TestATCBoundaries(unittest.TestCase):
 
     def testATCBoundaries(self):
         test = Defs()
+
         test.load()
         test.login()
-        time.sleep(5)
+        test.wait_for_login_refresh()
 
         test.click_settings_button()
         test.click_atc_boundaries_button()

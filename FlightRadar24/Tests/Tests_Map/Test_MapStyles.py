@@ -9,7 +9,7 @@ class TestMapStyles(unittest.TestCase):
 
         test.load()
         test.login()
-        time.sleep(5)
+        test.wait_for_login_refresh()
 
         test.click_settings_button()
         test.click_map_style_button()
