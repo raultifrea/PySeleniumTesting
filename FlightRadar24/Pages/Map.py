@@ -21,6 +21,8 @@ class Defs:
     Settings_Map_ATCBoundaries_list_locator = (By.XPATH, '//*[@id="fr24_showATC"]//descendant::a')
     Settings_Map_Aeronautical_Charts_dropdown_locator = (By.XPATH, '//*[@id="fr24_showNavdataLayer"]/button')
     Settings_Map_Aeronautical_Charts_list_locator = (By.XPATH, '//*[@id="fr24_showNavdataLayer"]//descendant::a')
+    Settings_Map_Aircraft_Size_dropdown_locator = (By.XPATH, '//*[@id="fr24_aircraftSize"]/button')
+    Settings_Map_Aircraft_Size_list_locator = (By.XPATH, '//*[@id="fr24_aircraftSize"]//descendant::a')
     Settings_Map_Brightness_slidebar_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/div')
     Settings_Map_Brightness_slider_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/a')
     Settings_Map_toggles_locator = (By.XPATH, "//*[@id='mapsettings']//div[contains(@class,'toggle')]")
@@ -121,15 +123,21 @@ class Defs:
         #returns a list of the default drop-down strings from the Settings menu
         return [element.text for element in self.get_list_of_default_dropdown_values()]
 
-    def check_dropdown_functionality(self, the_list, option: str):
+    def check_dropdown_functionality_old(self, the_list, option: str):
         #checks whether the selected dropdown value is saved in the header
-        self.click_selected_dropdown_value(the_list(), option)
+        self.check_dropdown_functionality(the_list(), option)
         assert option in self.get_list_of_default_dropdown_values_strings(), f"option: {option} is not saved correctly"
 
-    def click_selected_dropdown_value(self, the_list: list, option: str):
+    def check_dropdown_functionality(self, the_list: list, click):
+        '''
+        :param the_list: the list of all elements in a dropdown list (e.g. get_list_of_map_styles)
+        :param click: clicks the button pertaining to the same dropdown list (e.g. click_map_style_button)
+        :return: checks whether each dropdown value is saved in the header, one at a time
+        '''
         for element in the_list:
-            if element.text == option:
-                element.click()
+            element.click()
+            assert element.text in self.get_list_of_default_dropdown_values_strings(), f"option: {element.text} is not saved correctly"
+            click()
 
     @property
     def map_style_button(self):
@@ -164,6 +172,17 @@ class Defs:
         #returns a list of dropdown values from the Aeronautical Charts of the Map tab
         return self.driver.find_elements(*self.Settings_Map_Aeronautical_Charts_list_locator)
 
+    @property
+    def aircraft_sizes_button(self):
+        return self.driver.find_element(*self.Settings_Map_Aircraft_Size_dropdown_locator)
+
+    def get_list_of_aircraft_sizes(self):
+        #returns a list of dropdown values from the Aircraft sizes of the Map tab
+        return self.driver.find_elements(*self.Settings_Map_Aircraft_Size_list_locator)
+
+    def click_aircraft_sizes_button(self):
+        self.aircraft_sizes_button.click()
+
     def get_list_of_toggles(self):
         return self.driver.find_elements(*self.Settings_Map_toggles_locator)
 
@@ -187,7 +206,7 @@ class Defs:
         self.click_sign_in_button()
 
     def wait_for_login_refresh(self):
-        #waits up to 10 seconds for the subscription to be updated after login. Can be change to accept dynamic argument
+        #waits up to 10 seconds for the subscription to be updated after login. Can be changed to accept  argument
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.subscription_plan_locator))
 
     def quit(self):

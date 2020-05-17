@@ -10,11 +10,11 @@ class TestMapStyles(unittest.TestCase):
         test.load()
         test.login()
         test.wait_for_login_refresh()
-
         test.click_settings_button()
-        test.click_map_style_button()
 
+        click = test.click_map_style_button
         list_of_map_styles = test.get_list_of_map_styles
 
-        test.check_dropdown_functionality(list_of_map_styles, "Hybrid")
+        click()
+        test.check_dropdown_functionality(list_of_map_styles(), click)
         test.quit()

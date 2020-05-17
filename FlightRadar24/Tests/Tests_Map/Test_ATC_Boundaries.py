@@ -16,5 +16,5 @@ class TestATCBoundaries(unittest.TestCase):
 
         list_of_atc_boundaries = test.get_list_of_atc_boundaries
 
-        test.check_dropdown_functionality(list_of_atc_boundaries, "None")
+        test.check_dropdown_functionality_old(list_of_atc_boundaries, "None")
         test.quit()

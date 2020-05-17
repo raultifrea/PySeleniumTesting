@@ -16,5 +16,5 @@ class TestAeronauticalCharts(unittest.TestCase):
 
         list_of_aeronautical_charts = test.get_list_of_aeronautical_charts
 
-        test.check_dropdown_functionality(list_of_aeronautical_charts, "None")
+        test.check_dropdown_functionality_old(list_of_aeronautical_charts, "None")
         test.quit()
