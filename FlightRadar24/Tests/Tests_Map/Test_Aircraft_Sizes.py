@@ -15,6 +15,5 @@ class TestAircraftSizes(unittest.TestCase):
         click = test.click_aircraft_sizes_button
         list_of_aircraft_sizes = test.get_list_of_aircraft_sizes
 
-        click()
         test.check_dropdown_functionality(list_of_aircraft_sizes(), click)
         test.quit()

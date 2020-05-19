@@ -1,8 +1,9 @@
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
+import unittest
 
 
 class TestATCBoundaries(unittest.TestCase):
+    Title = ["ATC boundaries"]
 
     def testATCBoundaries(self):
         test = Defs()
@@ -10,11 +11,10 @@ class TestATCBoundaries(unittest.TestCase):
         test.load()
         test.login()
         test.wait_for_login_refresh()
-
         test.click_settings_button()
-        test.click_atc_boundaries_button()
 
+        click = test.click_atc_boundaries_button
         list_of_atc_boundaries = test.get_list_of_atc_boundaries
 
-        test.check_dropdown_functionality_old(list_of_atc_boundaries, "None")
+        test.check_dropdown_functionality(list_of_atc_boundaries(), click, self.Title)
         test.quit()

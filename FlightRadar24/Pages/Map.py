@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
@@ -23,6 +24,14 @@ class Defs:
     Settings_Map_Aeronautical_Charts_list_locator = (By.XPATH, '//*[@id="fr24_showNavdataLayer"]//descendant::a')
     Settings_Map_Aircraft_Size_dropdown_locator = (By.XPATH, '//*[@id="fr24_aircraftSize"]/button')
     Settings_Map_Aircraft_Size_list_locator = (By.XPATH, '//*[@id="fr24_aircraftSize"]//descendant::a')
+    Settings_Map_Aircraft_Labels1_dropdown_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel1"]/button')
+    Settings_Map_Aircraft_Labels1_list_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel1"]//descendant::a')
+    Settings_Map_Aircraft_Labels2_dropdown_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel2"]/button')
+    Settings_Map_Aircraft_Labels2_list_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel2"]//descendant::a')
+    Settings_Map_Aircraft_Labels3_dropdown_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel3"]/button')
+    Settings_Map_Aircraft_Labels3_list_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel3"]//descendant::a')
+    Settings_Map_Aircraft_Labels4_dropdown_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel4"]/button')
+    Settings_Map_Aircraft_Labels4_list_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel4"]//descendant::a')
     Settings_Map_Brightness_slidebar_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/div')
     Settings_Map_Brightness_slider_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/a')
     Settings_Map_toggles_locator = (By.XPATH, "//*[@id='mapsettings']//div[contains(@class,'toggle')]")
@@ -31,6 +40,9 @@ class Defs:
     Settings_dropdown_default_values_locator = (By.XPATH, "//button[@data-toggle='dropdown']")
     iframe_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/iframe')
     subscription_plan_locator = (By.XPATH, "//*[@class='subscription']")
+    upgrade_popup_close_button_locator = (By.XPATH, '//*[@id="map"]/div[15]/div[1]/a')
+    upgrade_popup_title_locator = (By.XPATH, '//*[@id="ui-id-2"]/h2')
+
 
     def __init__(self):
         self.driver = webdriver.Chrome()
@@ -123,21 +135,38 @@ class Defs:
         #returns a list of the default drop-down strings from the Settings menu
         return [element.text for element in self.get_list_of_default_dropdown_values()]
 
-    def check_dropdown_functionality_old(self, the_list, option: str):
-        #checks whether the selected dropdown value is saved in the header
-        self.check_dropdown_functionality(the_list(), option)
-        assert option in self.get_list_of_default_dropdown_values_strings(), f"option: {option} is not saved correctly"
-
-    def check_dropdown_functionality(self, the_list: list, click):
+    def check_dropdown_functionality(self, the_list: list, click, title=''):
         '''
+        :param title:
         :param the_list: the list of all elements in a dropdown list (e.g. get_list_of_map_styles)
         :param click: clicks the button pertaining to the same dropdown list (e.g. click_map_style_button)
         :return: checks whether each dropdown value is saved in the header, one at a time
         '''
+        click()
         for element in the_list:
-            element.click()
-            assert element.text in self.get_list_of_default_dropdown_values_strings(), f"option: {element.text} is not saved correctly"
+            if element.text != "None":  #first element not clickable
+                element.click()
+                try:
+                    assert self.upgrade_popup_title_text in title, f"incorrect popup title for {self.upgrade_popup_title_text}"
+                    self.click_upgrade_popup_close_button()
+                    continue
+                except NoSuchElementException:
+                    assert element.text in self.get_list_of_default_dropdown_values_strings(), f"option: {element.text} is not saved correctly"
+            else:
+                continue
             click()
+
+    @property
+    def upgrade_popup_close_button(self):
+        return self.driver.find_element(*self.upgrade_popup_close_button_locator)
+
+    def click_upgrade_popup_close_button(self):
+        self.upgrade_popup_close_button.click()
+
+    @property
+    def upgrade_popup_title_text(self):
+        #returns the title of the Upgrade Popup
+        return self.driver.find_element(*self.upgrade_popup_title_locator).text
 
     @property
     def map_style_button(self):
@@ -182,6 +211,46 @@ class Defs:
 
     def click_aircraft_sizes_button(self):
         self.aircraft_sizes_button.click()
+
+    @property
+    def aircraft_labels_button_1(self):
+        return self.driver.find_element(*self.Settings_Map_Aircraft_Labels1_dropdown_locator)
+
+    def get_list_of_aircraft_labels_1(self):
+        return self.driver.find_elements(*self.Settings_Map_Aircraft_Labels1_list_locator)
+
+    def click_aircraft_labels_button_1(self):
+        self.aircraft_labels_button_1.click()
+
+    @property
+    def aircraft_labels_button_2(self):
+        return self.driver.find_element(*self.Settings_Map_Aircraft_Labels2_dropdown_locator)
+
+    def get_list_of_aircraft_labels_2(self):
+        return self.driver.find_elements(*self.Settings_Map_Aircraft_Labels2_list_locator)
+
+    def click_aircraft_labels_button_2(self):
+        self.aircraft_labels_button_2.click()
+
+    @property
+    def aircraft_labels_button_3(self):
+        return self.driver.find_element(*self.Settings_Map_Aircraft_Labels3_dropdown_locator)
+
+    def get_list_of_aircraft_labels_3(self):
+        return self.driver.find_elements(*self.Settings_Map_Aircraft_Labels3_list_locator)
+
+    def click_aircraft_labels_button_3(self):
+        self.aircraft_labels_button_3.click()
+
+    @property
+    def aircraft_labels_button_4(self):
+        return self.driver.find_element(*self.Settings_Map_Aircraft_Labels4_dropdown_locator)
+
+    def get_list_of_aircraft_labels_4(self):
+        return self.driver.find_elements(*self.Settings_Map_Aircraft_Labels4_list_locator)
+
+    def click_aircraft_labels_button_4(self):
+        self.aircraft_labels_button_4.click()
 
     def get_list_of_toggles(self):
         return self.driver.find_elements(*self.Settings_Map_toggles_locator)

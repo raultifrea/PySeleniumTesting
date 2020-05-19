@@ -15,6 +15,5 @@ class TestMapStyles(unittest.TestCase):
         click = test.click_map_style_button
         list_of_map_styles = test.get_list_of_map_styles
 
-        click()
         test.check_dropdown_functionality(list_of_map_styles(), click)
         test.quit()
