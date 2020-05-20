@@ -9,7 +9,6 @@ class TestAircraftLabels1(unittest.TestCase):
 
         test.load()
         test.login()
-        test.wait_for_login_refresh()
         test.click_settings_button()
 
         click = test.click_aircraft_labels_button_1

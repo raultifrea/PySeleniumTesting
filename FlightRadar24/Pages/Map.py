@@ -1,13 +1,15 @@
+from FlightRadar24.Components.Components import Component
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 import time
 
 
-class Defs:
+class Defs(Component):
     URL = 'https://www.flightradar24.com'
     About_locator = (By.XPATH, "//*[@class='important-banner__footer']//child::button")
     LogIn_locator = (By.XPATH, "//*[@class='dropdown-toggle logout']")
@@ -42,13 +44,44 @@ class Defs:
     subscription_plan_locator = (By.XPATH, "//*[@class='subscription']")
     upgrade_popup_close_button_locator = (By.XPATH, '//*[@id="map"]/div[15]/div[1]/a')
     upgrade_popup_title_locator = (By.XPATH, '//*[@id="ui-id-2"]/h2')
-
-
-    def __init__(self):
-        self.driver = webdriver.Chrome()
+    Settings_Reset_button_locator = (By.XPATH, '//*[@id="fr24_SettingsResetButton"]')
+    Settings_Reset_button_idle_locator = (By.XPATH, '//*[@class="btn dropdown-toggle btn-danger"]')
+    fr_home_logo_button_locator = (By.XPATH, "//*[@class='logo-fr24-flat']")
 
     def switch_to_frame(self):
         self.driver.switch_to.frame(2)
+
+    @property
+    def home_logo_button(self):
+        return self.driver.find_element(*self.fr_home_logo_button_locator)
+
+    def click_home_logo_button(self):
+        return self.home_logo_button.click()
+
+    @property
+    def reset_button(self):
+        #defines the Reset settings button
+        return self.driver.find_element(*self.Settings_Reset_button_locator)
+
+    def click_reset_button(self):
+        self.reset_button.click()
+
+    def get_reset_button_text(self):
+        return self.reset_button.text
+
+    def check_reset_functionality(self):
+        '''
+        :return: Validates the text for all the 3 states of the reset button and waits for the refresh at the end
+        '''
+        assert self.get_reset_button_text() == 'Reset all settings', 'Text is not Reset all settings'
+        self.click_reset_button()  # switches to Press to Confirm state
+        assert self.get_reset_button_text() == 'Press to Confirm', 'Text is not Press to Confirm'
+        self.wait_to_load(self.Settings_Reset_button_idle_locator)
+        # The idle reset string is displayed only after about 4 seconds once the button is clicked above
+        assert self.get_reset_button_text() in 'Reset to Default', 'Text is not Reset to Default'
+        self.click_reset_button()  # switches to Press to Confirm state
+        self.click_reset_button()  # performs the Reset
+        self.wait_to_load(self.fr_home_logo_button_locator)
 
     @property
     def brigthness_button_slidebar(self):
@@ -137,7 +170,7 @@ class Defs:
 
     def check_dropdown_functionality(self, the_list: list, click, title=''):
         '''
-        :param title:
+        :param title: optional param, in case the feature is locked, check the upgrade popup title text
         :param the_list: the list of all elements in a dropdown list (e.g. get_list_of_map_styles)
         :param click: clicks the button pertaining to the same dropdown list (e.g. click_map_style_button)
         :return: checks whether each dropdown value is saved in the header, one at a time
@@ -255,11 +288,19 @@ class Defs:
     def get_list_of_toggles(self):
         return self.driver.find_elements(*self.Settings_Map_toggles_locator)
 
-    def change_toggle_button_state(self, option: str):
+    def change_toggle_button_state(self, title=''):
+        '''
+        :param title: optional param, in case the feature is locked, check the upgrade popup title text
+        :return: clicks each toggle button with a pause of 2 seconds between them.
+        '''
         for element in self.get_list_of_toggles():
-            if element.get_attribute('id') == option:
-                element.click()
-                time.sleep(3)
+            time.sleep(1)
+            element.click()
+            time.sleep(1)
+            try:
+                assert self.upgrade_popup_title_text in title, f"incorrect popup title for {self.upgrade_popup_title_text}"
+            except NoSuchElementException:
+                continue
 
     def load(self):
         self.driver.maximize_window()
@@ -273,10 +314,7 @@ class Defs:
         self.click_password_button()
         self.send_keys_password_button("nokianseries")
         self.click_sign_in_button()
-
-    def wait_for_login_refresh(self):
-        #waits up to 10 seconds for the subscription to be updated after login. Can be changed to accept  argument
-        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.subscription_plan_locator))
+        self.wait_to_load(self.subscription_plan_locator)
 
     def quit(self):
         self.driver.quit()
