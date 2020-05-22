@@ -10,7 +10,6 @@ class TestAeronauticalCharts(unittest.TestCase):
 
         test.load()
         test.login()
-        test.wait_to_load()
         test.click_settings_button()
 
         click = test.click_aeronautical_charts_button

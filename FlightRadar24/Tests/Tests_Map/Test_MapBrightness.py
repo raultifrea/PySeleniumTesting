@@ -10,6 +10,8 @@ class TestMapBrightness(unittest.TestCase):
         test.click_settings_button()
 
         slider = test.brightness_button_slider
+
+        time.sleep(3)
         test.drag_and_drop_slider(500, slider)
-        time.sleep(5)
+        time.sleep(3)
         test.quit()

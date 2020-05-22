@@ -37,9 +37,11 @@ class Defs(Component):
     Settings_Map_Brightness_slidebar_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/div')
     Settings_Map_Brightness_slider_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/a')
     Settings_Map_toggles_locator = (By.XPATH, "//*[@id='mapsettings']//div[contains(@class,'toggle')]")
-    Settings_Map_airport_pin_visibility_slidebar_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/div')
+    Settings_Weather_toggles_locator = (By.XPATH, "//div[contains(@class,'weather-tile toggle')]")
+    Settings_Map_slidebar_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/div')
     Settings_Map_airport_pin_visibility_slider_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/a')
     Settings_dropdown_default_values_locator = (By.XPATH, "//button[@data-toggle='dropdown']")
+    Settings_Weather_button_locator = (By.XPATH, '//*[@id="fr24_SettingsDropdown"]/li[1]/ul/li[2]/a')
     iframe_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/iframe')
     subscription_plan_locator = (By.XPATH, "//*[@class='subscription']")
     upgrade_popup_close_button_locator = (By.XPATH, '//*[@id="map"]/div[15]/div[1]/a')
@@ -94,28 +96,26 @@ class Defs(Component):
         return self.driver.find_element(*self.Settings_Map_Brightness_slider_locator)
 
     @property
-    def airport_pin_visilibity_slidebar(self):
+    def map_slidebar(self):
         #defines the slide bar
-        return self.driver.find_element(*self.Settings_Map_airport_pin_visibility_slidebar_locator)
+        return self.driver.find_element(*self.Settings_Map_slidebar_locator)
 
     @property
     def airport_pin_visilibity_slider(self):
         #defines the slider circle
         return self.driver.find_element(*self.Settings_Map_airport_pin_visibility_slider_locator)
 
-    def slidebar_width(self):
-        #defines the slide bar's width value as integer (21)
-        self.width = self.airport_pin_visilibity_slidebar.size['width']
-        #same width as for brightness slidebar, no extra locator needed
-        return self.width
-
     def move(self):
         move = ActionChains(self.driver)
         return move
 
-    def drag_and_drop_slider(self, percent: int, slider):
-        #drags and drops the given slider (brightness or pin visibility) on the slide bar by a given percent integer
-        self.move().click_and_hold(slider).move_by_offset(percent * self.slidebar_width() / 100, 0).release().perform()
+    def drag_and_drop_slider(self, percent: int, slider: WebElement):
+        '''
+        :param percent: the percent to which the slider is dragged
+        :param slider: the slider webelement circle button to drag
+        :return: drags and drops the given slider on the slide bar by a given percent integer
+        '''
+        self.move().click_and_hold(slider).move_by_offset(percent * self.slidebar_width(self.map_slidebar) / 100, 0).release().perform()
 
     @property
     def email_button(self):
@@ -285,15 +285,12 @@ class Defs(Component):
     def click_aircraft_labels_button_4(self):
         self.aircraft_labels_button_4.click()
 
-    def get_list_of_toggles(self):
-        return self.driver.find_elements(*self.Settings_Map_toggles_locator)
-
-    def change_toggle_button_state(self, title=''):
+    def change_toggle_button_state(self, lista, title=''):
         '''
         :param title: optional param, in case the feature is locked, check the upgrade popup title text
         :return: clicks each toggle button with a pause of 2 seconds between them.
         '''
-        for element in self.get_list_of_toggles():
+        for element in lista():
             time.sleep(1)
             element.click()
             time.sleep(1)
@@ -301,6 +298,19 @@ class Defs(Component):
                 assert self.upgrade_popup_title_text in title, f"incorrect popup title for {self.upgrade_popup_title_text}"
             except NoSuchElementException:
                 continue
+
+    def get_list_of_toggles(self):
+        return self.driver.find_elements(*self.Settings_Map_toggles_locator)
+
+    def get_list_of_weather_toggles(self):
+        return self.driver.find_elements(*self.Settings_Weather_toggles_locator)
+
+    @property
+    def weather_button(self):
+        return self.driver.find_element(*self.Settings_Weather_button_locator)
+
+    def click_weather_button(self):
+        self.weather_button.click()
 
     def load(self):
         self.driver.maximize_window()
