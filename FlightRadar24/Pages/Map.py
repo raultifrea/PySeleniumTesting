@@ -34,14 +34,20 @@ class Defs(Component):
     Settings_Map_Aircraft_Labels3_list_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel3"]//descendant::a')
     Settings_Map_Aircraft_Labels4_dropdown_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel4"]/button')
     Settings_Map_Aircraft_Labels4_list_locator = (By.XPATH, '//*[@id="fr24_aircraftLabel4"]//descendant::a')
+    Settings_Visibility_Estimations_button_locator = (By.XPATH, '//*[@id="fr24_showEstimated"]/button')
+    Settings_Visibility_Estimations_list_locator = (By.XPATH, '//*[@id="fr24_showEstimated"]//descendant::a')
     Settings_Map_Brightness_slidebar_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/div')
     Settings_Map_Brightness_slider_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/a')
     Settings_Map_toggles_locator = (By.XPATH, "//*[@id='mapsettings']//div[contains(@class,'toggle')]")
     Settings_Weather_toggles_locator = (By.XPATH, "//div[contains(@class,'weather-tile toggle')]")
+    Settings_Visibility_toggles_locator = (By.XPATH, "//div[@id='visibilitysettings']//*[contains(@class,'toggle ')]")
     Settings_Map_slidebar_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/div')
     Settings_Map_airport_pin_visibility_slider_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/a')
     Settings_dropdown_default_values_locator = (By.XPATH, "//button[@data-toggle='dropdown']")
     Settings_Weather_button_locator = (By.XPATH, '//*[@id="fr24_SettingsDropdown"]/li[1]/ul/li[2]/a')
+    Settings_Visibility_button_locator = (By.XPATH, '//*[@id="fr24_SettingsDropdown"]/li[1]/ul/li[3]/a')
+    Settings_Misc_button_locator = (By.XPATH, '//*[@id="fr24_SettingsDropdown"]/li[1]/ul/li[4]/a')
+    Settings_Misc_toggles_locator = (By.XPATH, "//div[@id='timesettings']//*[contains(@class,'toggle ')]")
     iframe_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/iframe')
     subscription_plan_locator = (By.XPATH, "//*[@class='subscription']")
     upgrade_popup_close_button_locator = (By.XPATH, '//*[@id="map"]/div[15]/div[1]/a')
@@ -189,6 +195,7 @@ class Defs(Component):
                 continue
             click()
 
+
     @property
     def upgrade_popup_close_button(self):
         return self.driver.find_element(*self.upgrade_popup_close_button_locator)
@@ -285,8 +292,19 @@ class Defs(Component):
     def click_aircraft_labels_button_4(self):
         self.aircraft_labels_button_4.click()
 
+    @property
+    def estimations_button(self):
+        return self.driver.find_element(*self.Settings_Visibility_Estimations_button_locator)
+
+    def click_estimations_button(self):
+        self.estimations_button.click()
+
+    def get_list_of_estimations(self):
+        return self.driver.find_elements(*self.Settings_Visibility_Estimations_list_locator)
+
     def change_toggle_button_state(self, lista, title=''):
         '''
+        :param lista: the list of toggle WebElements to click through
         :param title: optional param, in case the feature is locked, check the upgrade popup title text
         :return: clicks each toggle button with a pause of 2 seconds between them.
         '''
@@ -305,12 +323,32 @@ class Defs(Component):
     def get_list_of_weather_toggles(self):
         return self.driver.find_elements(*self.Settings_Weather_toggles_locator)
 
+    def get_list_of_visibility_toggles(self):
+        return self.driver.find_elements(*self.Settings_Visibility_toggles_locator)
+
+    def get_list_of_misc_toggles(self):
+        return self.driver.find_elements(*self.Settings_Misc_toggles_locator)
+
     @property
     def weather_button(self):
         return self.driver.find_element(*self.Settings_Weather_button_locator)
 
     def click_weather_button(self):
         self.weather_button.click()
+
+    @property
+    def visibility_button(self):
+        return self.driver.find_element(*self.Settings_Visibility_button_locator)
+
+    def click_visibility_button(self):
+        self.visibility_button.click()
+
+    @property
+    def misc_button(self):
+        return self.driver.find_element(*self.Settings_Misc_button_locator)
+
+    def click_misc_button(self):
+        self.misc_button.click()
 
     def load(self):
         self.driver.maximize_window()
