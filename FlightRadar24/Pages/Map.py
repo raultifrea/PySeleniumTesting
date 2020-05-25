@@ -1,6 +1,6 @@
 from FlightRadar24.Components.Components import Component
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
@@ -48,6 +48,8 @@ class Defs(Component):
     Settings_Visibility_button_locator = (By.XPATH, '//*[@id="fr24_SettingsDropdown"]/li[1]/ul/li[3]/a')
     Settings_Misc_button_locator = (By.XPATH, '//*[@id="fr24_SettingsDropdown"]/li[1]/ul/li[4]/a')
     Settings_Misc_toggles_locator = (By.XPATH, "//div[@id='timesettings']//*[contains(@class,'toggle ')]")
+    Settings_Misc_dropdown_buttons_locator = (By.XPATH, "//div[@id='timesettings']//button[contains(@class,'dropdown')]")
+    Settings_Misc_dropdown_descendants_locator = (By.XPATH, "//div[@id='timesettings']//*[@class='dropdown-menu']//descendant::a")
     iframe_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/iframe')
     subscription_plan_locator = (By.XPATH, "//*[@class='subscription']")
     upgrade_popup_close_button_locator = (By.XPATH, '//*[@id="map"]/div[15]/div[1]/a')
@@ -195,6 +197,30 @@ class Defs(Component):
                 continue
             click()
 
+    def get_list_of_misc_dropdown_buttons(self):
+        return self.driver.find_elements(*self.Settings_Misc_dropdown_buttons_locator)
+
+    def get_list_of_misc_dropdown_descendants(self):
+        return self.driver.find_elements(*self.Settings_Misc_dropdown_descendants_locator)
+
+    def check_misc_dropdown_functionality(self):
+        '''
+        :return: clicks each dropdown button on the misc tab and for each click the dropdown option available
+        '''
+        list_of_dropdowns = self.get_list_of_misc_dropdown_buttons()
+        list_of_descendants = self.get_list_of_misc_dropdown_descendants()
+        for element in list_of_dropdowns:
+            element.click()
+            time.sleep(1)
+            for descendant in list_of_descendants:
+                if descendant.is_displayed():
+                    descendant.click()
+                    time.sleep(1)
+                    element.click()
+                    time.sleep(1)
+                else:
+                    pass
+            element.click()
 
     @property
     def upgrade_popup_close_button(self):
