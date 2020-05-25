@@ -57,9 +57,100 @@ class Defs(Component):
     Settings_Reset_button_locator = (By.XPATH, '//*[@id="fr24_SettingsResetButton"]')
     Settings_Reset_button_idle_locator = (By.XPATH, '//*[@class="btn dropdown-toggle btn-danger"]')
     fr_home_logo_button_locator = (By.XPATH, "//*[@class='logo-fr24-flat']")
+    FullScreen_button_locator = (By.XPATH, '//*[@id="fr24_Fullscreen"]')
+    FullScreen_upgrade_popup_title_locator = (By.XPATH, '//*[@id="ui-id-2"]/h2')
+    Map_Body_locator = (By.XPATH, '//*[@id="map"]')
+    Filter_button_locator = (By.XPATH, '//*[@id="fr24_FiltersMenu"]')
+    Filter_toggle_locator = (By.XPATH, '//*[@id="fr24_enableFilters"]')
+    Filter_type_toggle_locator = (By.XPATH, '//*[@id="fr24_FilterType"]')
+    Filter_callsign_input_locator = (By.XPATH, '//*[@id="fr24_FilterBy_callsign"]/input')
+    Filter_add_button_locator = (By.XPATH, '//*[@id="fr24_FilterAdd"]')
+    Filter_item_locator = (By.XPATH, '//*[@id="fr24_FilterList"]/li/div')
+
+    def get_filter_item_text(self):
+        return self.driver.find_element(*self.Filter_item_locator).text
+
+    @property
+    def filter_add_button(self):
+        return self.driver.find_element(*self.Filter_add_button_locator)
+
+    def click_filter_add_button(self):
+        self.filter_add_button.click()
+
+    @property
+    def filter_button(self):
+        return self.driver.find_element(*self.Filter_button_locator)
+
+    def click_filter_button(self):
+        self.filter_button.click()
+
+    @property
+    def filter_toggle_button(self):
+        return self.driver.find_element(*self.Filter_toggle_locator)
+
+    def click_filter_toggle(self):
+        self.filter_toggle_button.click()
+
+    @property
+    def filter_type_dropdown_button(self):
+        return self.driver.find_element(*self.Filter_type_toggle_locator)
+
+    def click_filter_type(self):
+        self.filter_type_dropdown_button.click()
+
+    @property
+    def filter_callsign_input_button(self):
+        return self.driver.find_element(*self.Filter_callsign_input_locator)
+
+    def click_filter_callsign_input(self):
+        self.filter_callsign_input_button.click()
+
+    def send_keys_filter_callsign_input(self, callsign: str):
+        '''
+        :param callsign: the callsign as a string to be passed in the input field
+        :return: fills the input field with a given string representing the callsign
+        '''
+        self.filter_callsign_input_button.clear()
+        self.filter_callsign_input_button.send_keys(callsign)
+
+    def check_filter_text(self, text: str):
+        '''
+        :param text: the string representing either one of the following: callsign, airport code, aircraft type,
+        registration, radar
+        :return: checks whether the filter type has been saved
+        '''
+        assert text in self.get_filter_item_text(), "Filter was not saved correctly"
 
     def switch_to_frame(self):
         self.driver.switch_to.frame(2)
+
+    @property
+    def full_screen_button(self):
+        return self.driver.find_element(*self.FullScreen_button_locator)
+
+    def click_full_screen_button(self):
+        self.full_screen_button.click()
+
+    def get_full_screen_popup_title_text(self):
+        return self.driver.find_element(*self.FullScreen_upgrade_popup_title_locator).text
+
+    def check_full_screen_title_text(self, title: str):
+        '''
+        :param title: the title string from the upgrade popup, as given in the test file
+        :return: checks whether the title is correct in the full screen upgrade popup
+        '''
+        self.click_full_screen_button()
+        assert title == self.get_full_screen_popup_title_text(), "Full Screen title text incorrect"
+
+    def get_map_body(self):
+        return self.driver.find_element(*self.Map_Body_locator)
+
+    def check_full_screen_functionality(self):
+        '''
+        :return: checks whether the full screen mode has been enabled
+        '''
+        self.click_full_screen_button()
+        assert 'fullscreenView' in self.get_map_body().get_attribute('class'), 'Full Screen has not been triggered'
 
     @property
     def home_logo_button(self):
