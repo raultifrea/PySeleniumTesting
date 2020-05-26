@@ -62,10 +62,31 @@ class Defs(Component):
     Map_Body_locator = (By.XPATH, '//*[@id="map"]')
     Filter_button_locator = (By.XPATH, '//*[@id="fr24_FiltersMenu"]')
     Filter_toggle_locator = (By.XPATH, '//*[@id="fr24_enableFilters"]')
-    Filter_type_toggle_locator = (By.XPATH, '//*[@id="fr24_FilterType"]')
+    Filter_type_dropdown_locator = (By.XPATH, '//*[@id="fr24_FilterType"]')
+    Filter_type_dropdown_descendants_locator = (By.XPATH, '//*[@id="fr24_FilterSettings"]/div/div[3]/ul//descendant::a')
+    Filter_inputs_locator = (By.XPATH, '//*[@id="fr24_FilterOptions"]//descendant::input')
     Filter_callsign_input_locator = (By.XPATH, '//*[@id="fr24_FilterBy_callsign"]/input')
     Filter_add_button_locator = (By.XPATH, '//*[@id="fr24_FilterAdd"]')
     Filter_item_locator = (By.XPATH, '//*[@id="fr24_FilterList"]/li/div')
+    Filter_sliderbar_locator = (By.XPATH, '//*[@id="fr24_FilterSpeed"]')
+    Filter_airport_dropdown_locator = (By.XPATH, '//*[@id="fr24_FilterAirportDirection"]')
+    Filter_airport_dropdown_descendants_locator = (By.XPATH, '//*[@id="fr24_FilterBy_airport"]/div//descendant::a')
+
+    def get_list_of_filter_airport_descendants(self):
+        return self.driver.find_elements(*self.Filter_airport_dropdown_descendants_locator)
+
+    @property
+    def filter_airport_dropdown_button(self):
+        return self.driver.find_element(*self.Filter_airport_dropdown_locator)
+
+    def click_filter_airport_dropdown_button(self):
+        self.filter_airport_dropdown_button.click()
+
+    def get_list_of_filter_inputs(self):
+        return self.driver.find_elements(*self.Filter_inputs_locator)
+
+    def get_list_of_filter_descendants(self):
+        return self.driver.find_elements(*self.Filter_type_dropdown_descendants_locator)
 
     def get_filter_item_text(self):
         return self.driver.find_element(*self.Filter_item_locator).text
@@ -93,9 +114,9 @@ class Defs(Component):
 
     @property
     def filter_type_dropdown_button(self):
-        return self.driver.find_element(*self.Filter_type_toggle_locator)
+        return self.driver.find_element(*self.Filter_type_dropdown_locator)
 
-    def click_filter_type(self):
+    def click_filter_type_dropdown_button(self):
         self.filter_type_dropdown_button.click()
 
     @property
@@ -119,9 +140,45 @@ class Defs(Component):
         registration, radar
         :return: checks whether the filter type has been saved
         '''
-        assert text in self.get_filter_item_text(), "Filter was not saved correctly"
+        assert text.upper() in self.get_filter_item_text(), "Filter was not saved correctly"
+
+    def check_filter_functionality(self, filter_type, text='', inout=''):
+        '''
+        :param filter_type: the selected filter tpye from the dropdown list
+        :param text: the input text for the selected filter. if filter is of slider type, do not fill
+        :param inout: parameter if the filter_type is 'airport'. Can be either 'in or 'out'. Optional
+        :return: checks whether the applied filter is saved and checks either the input text (for input field filters)
+        or the filter type text (for slider filters)
+        '''
+        slider_filters = ["Altitude", "Speed"]  # slider filters
+        self.click_filter_button()
+        if "off" in self.filter_toggle_button.get_attribute("class"):
+            self.click_filter_toggle()
+        self.click_filter_type_dropdown_button()
+        for descendant in self.get_list_of_filter_descendants():
+            if filter_type.title() == descendant.text and descendant.text in slider_filters:
+                descendant.click()
+                self.click_filter_add_button()
+                self.check_filter_text(filter_type)
+                break
+            elif filter_type.title() == descendant.text:
+                descendant.click()
+        for input_field in self.get_list_of_filter_inputs():
+            if input_field.is_displayed():
+                input_field.clear()
+                input_field.send_keys(text)
+                if filter_type.title() == "Airport" and inout != '':
+                    self.click_filter_airport_dropdown_button()
+                    for option in self.get_list_of_filter_airport_descendants():
+                        if option.text == inout.title():
+                            option.click()
+                self.click_filter_add_button()
+                self.check_filter_text(text)
+                break
+        #print(self.slidebar_width(self.filter_slidebar)) 142
 
     def switch_to_frame(self):
+        #not used
         self.driver.switch_to.frame(2)
 
     @property
@@ -198,6 +255,10 @@ class Defs(Component):
     def map_slidebar(self):
         #defines the slide bar
         return self.driver.find_element(*self.Settings_Map_slidebar_locator)
+
+    @property
+    def filter_slidebar(self):
+        return self.driver.find_element(*self.Filter_sliderbar_locator)
 
     @property
     def airport_pin_visilibity_slider(self):
