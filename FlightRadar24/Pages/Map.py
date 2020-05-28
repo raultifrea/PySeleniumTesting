@@ -1,11 +1,6 @@
 from FlightRadar24.Components.Components import Component
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, ElementNotVisibleException, WebDriverException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-from selenium.webdriver import ActionChains
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
 import time
 
 
@@ -71,6 +66,38 @@ class Defs(Component):
     Filter_sliderbar_locator = (By.XPATH, '//*[@id="fr24_FilterSpeed"]')
     Filter_airport_dropdown_locator = (By.XPATH, '//*[@id="fr24_FilterAirportDirection"]')
     Filter_airport_dropdown_descendants_locator = (By.XPATH, '//*[@id="fr24_FilterBy_airport"]/div//descendant::a')
+    Filter_speed_left_slider_locator = (By.XPATH, '//*[@id="fr24_FilterSpeed"]/a[1]')
+    Filter_speed_right_slider_locator = (By.XPATH, '//*[@id="fr24_FilterSpeed"]/a[2]')
+    Filter_slider_list_locator = (By.XPATH, "//*[@id='fr24_FilterOptions']//a[contains(@class, 'slider')]")
+    Filter_limit_locator = (By.XPATH, '//*[@id="fr24_FilterSettings"]/div/p')
+    Bookmarks_button_locator = (By.XPATH, '//*[@id="fr24_BookmarksMenu"]')
+    Bookmarks_list_locator = (By.XPATH, '//*[@id="bookmarks-start"]/div//descendant::li')
+    Map_Data_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/div[4]/div/div[2]/span')
+    Map_planes_airports_locator = (By.XPATH, "//div[@class='marker_label'][1]")
+
+    @property
+    def bookmarks_button(self):
+        return self.driver.find_element(*self.Bookmarks_button_locator)
+
+    def click_bookmarks_button(self):
+        self.bookmarks_button.click()
+
+    def get_list_of_bookmarks(self):
+        return self.driver.find_elements(*self.Bookmarks_list_locator)
+
+    def click_bookmarks(self):
+        for bookmark in self.get_list_of_bookmarks():
+            self.click_bookmarks_button()
+            bookmark.click()
+            #self.wait_to_load(self.Map_Data_locator)
+            #self.wait_to_load_all_elements(self.Map_planes_airports_locator)
+            time.sleep(3)
+
+    def get_filter_limit_text(self):
+        return self.driver.find_element(*self.Filter_limit_locator).text
+
+    def get_list_of_filter_sliders(self):
+        return self.driver.find_elements(*self.Filter_slider_list_locator)
 
     def get_list_of_filter_airport_descendants(self):
         return self.driver.find_elements(*self.Filter_airport_dropdown_descendants_locator)
@@ -150,7 +177,7 @@ class Defs(Component):
         :return: checks whether the applied filter is saved and checks either the input text (for input field filters)
         or the filter type text (for slider filters)
         '''
-        slider_filters = ["Altitude", "Speed"]  # slider filters
+        slider_filters = ["Altitude", "Speed"]
         self.click_filter_button()
         if "off" in self.filter_toggle_button.get_attribute("class"):
             self.click_filter_toggle()
@@ -158,6 +185,7 @@ class Defs(Component):
         for descendant in self.get_list_of_filter_descendants():
             if filter_type.title() == descendant.text and descendant.text in slider_filters:
                 descendant.click()
+                self.slide()
                 self.click_filter_add_button()
                 self.check_filter_text(filter_type)
                 break
@@ -175,7 +203,9 @@ class Defs(Component):
                 self.click_filter_add_button()
                 self.check_filter_text(text)
                 break
-        #print(self.slidebar_width(self.filter_slidebar)) 142
+
+    def check_filter_limit_text(self, text: str):
+        assert text == self.get_filter_limit_text(), "The text doesn't match: " + self.get_filter_limit_text()
 
     def switch_to_frame(self):
         #not used
@@ -261,21 +291,25 @@ class Defs(Component):
         return self.driver.find_element(*self.Filter_sliderbar_locator)
 
     @property
+    def filter_speed_left_slider(self):
+        return self.driver.find_element(*self.Filter_speed_left_slider_locator)
+
+    @property
+    def filter_speed_right_slider(self):
+        return self.driver.find_element(*self.Filter_speed_right_slider_locator)
+
+    @property
     def airport_pin_visilibity_slider(self):
-        #defines the slider circle
+        # defines the slider circle
         return self.driver.find_element(*self.Settings_Map_airport_pin_visibility_slider_locator)
 
-    def move(self):
-        move = ActionChains(self.driver)
-        return move
-
-    def drag_and_drop_slider(self, percent: int, slider: WebElement):
-        '''
-        :param percent: the percent to which the slider is dragged
-        :param slider: the slider webelement circle button to drag
-        :return: drags and drops the given slider on the slide bar by a given percent integer
-        '''
-        self.move().click_and_hold(slider).move_by_offset(percent * self.slidebar_width(self.map_slidebar) / 100, 0).release().perform()
+    def slide(self):
+        # can be expanded to accept multiple sliders
+        for element in self.get_list_of_filter_sliders():
+            if element.is_displayed():
+                self.drag_and_drop_slider(25, element, self.filter_slidebar)
+            else:
+                continue
 
     @property
     def email_button(self):

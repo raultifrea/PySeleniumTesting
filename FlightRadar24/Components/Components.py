@@ -1,3 +1,4 @@
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
@@ -16,9 +17,26 @@ class Component:
         '''
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
 
+    def wait_to_load_all_elements(self, locator):
+        #in progress
+        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(locator))
+
     def slidebar_width(self, slidebar: WebElement):
         '''
         :param slidebar: the slidebar webelement to calculate its width
         :return: returns the slide bar's width value as integer
         '''
         return slidebar.size['width']
+
+    def move(self):
+        move = ActionChains(self.driver)
+        return move
+
+    def drag_and_drop_slider(self, percent: int, slider: WebElement, slidebar: WebElement):
+        '''
+        :param percent: the percent to which the slider is dragged
+        :param slider: the slider webelement circle button to drag
+        :param slidebar: the slidebar webelement to take into account
+        :return: drags and drops the given slider on the slide bar by a given percent integer
+        '''
+        self.move().click_and_hold(slider).move_by_offset(percent * self.slidebar_width(slidebar) / 100, 0).release().perform()

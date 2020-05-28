@@ -10,8 +10,9 @@ class TestMapAirportPinVisibility(unittest.TestCase):
         test.click_settings_button()
 
         slider = test.airport_pin_visilibity_slider
+        slidebar = test.map_slidebar
 
         time.sleep(3)
-        test.drag_and_drop_slider(500, slider)
+        test.drag_and_drop_slider(500, slider, slidebar)
         time.sleep(3)
         test.quit()

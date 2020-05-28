@@ -2,7 +2,7 @@ from FlightRadar24.Pages.Map import Defs
 import unittest, time
 
 
-class TestFilterAdd(unittest.TestCase):
+class TestFilterAddGuest(unittest.TestCase):
 
     filter_type = 'altitude'
     '''
@@ -11,13 +11,14 @@ class TestFilterAdd(unittest.TestCase):
     '''
     input_text = ''
     inout = ''
+    text = 'If you want to set more filters, please check out our subscription plans.'
 
-    def testFilterAdd(self):
+    def testFilterAddGuest(self):
 
         test = Defs()
         test.load()
-        test.login()
         test.check_filter_functionality(self.filter_type, self.input_text, self.inout)
+        test.check_filter_limit_text(self.text)
         time.sleep(3)
 
         test.quit()
