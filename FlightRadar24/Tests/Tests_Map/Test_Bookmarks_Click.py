@@ -8,5 +8,6 @@ class TestBookmarksClick(unittest.TestCase):
 
         test = Defs()
         test.load()
+        test.login()
         test.click_bookmarks()
         test.quit()

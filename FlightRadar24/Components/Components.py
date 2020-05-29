@@ -17,9 +17,16 @@ class Component:
         '''
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
 
-    def wait_to_load_all_elements(self, locator):
-        #in progress
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(locator))
+    def wait_for_text_to_change(self, element: WebElement):
+        '''
+        :param element: the web element whose text to wait for
+        :return: waits upt to 10 seconds for the element's text to change, otherwise is breaks
+        '''
+        original_value = element.text
+        while original_value == element.text:
+            WebDriverWait(self.driver, 10)
+        else:
+            return element
 
     def slidebar_width(self, slidebar: WebElement):
         '''

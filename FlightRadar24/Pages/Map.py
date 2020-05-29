@@ -73,7 +73,12 @@ class Defs(Component):
     Bookmarks_button_locator = (By.XPATH, '//*[@id="fr24_BookmarksMenu"]')
     Bookmarks_list_locator = (By.XPATH, '//*[@id="bookmarks-start"]/div//descendant::li')
     Map_Data_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/div[4]/div/div[2]/span')
-    Map_planes_airports_locator = (By.XPATH, "//div[@class='marker_label'][1]")
+    #Map_first_plane_locator = (By.XPATH, "//div[@class='marker_label'][1]")
+    Map_first_plane_locator = (By.XPATH, '//*[@id="menuPlanesValue"]')
+
+    @property
+    def first_plane(self):
+        return self.driver.find_element(*self.Map_first_plane_locator)
 
     @property
     def bookmarks_button(self):
@@ -86,12 +91,13 @@ class Defs(Component):
         return self.driver.find_elements(*self.Bookmarks_list_locator)
 
     def click_bookmarks(self):
+        '''
+        :return: clicks each bookmark and waits for the airport and plane pins to load before moving to the next
+        '''
         for bookmark in self.get_list_of_bookmarks():
             self.click_bookmarks_button()
             bookmark.click()
-            #self.wait_to_load(self.Map_Data_locator)
-            #self.wait_to_load_all_elements(self.Map_planes_airports_locator)
-            time.sleep(3)
+            self.wait_for_text_to_change(self.first_plane)
 
     def get_filter_limit_text(self):
         return self.driver.find_element(*self.Filter_limit_locator).text
