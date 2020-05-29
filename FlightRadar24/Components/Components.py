@@ -17,6 +17,10 @@ class Component:
         '''
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
 
+    def text_to_be_present_in_element(self, locator, text):
+        #not used
+        WebDriverWait(self.driver, 10).until(EC.text_to_be_present_in_element(locator, text))
+
     def wait_for_text_to_change(self, element: WebElement):
         '''
         :param element: the web element whose text to wait for
@@ -25,6 +29,7 @@ class Component:
         original_value = element.text
         while original_value == element.text:
             WebDriverWait(self.driver, 10)
+            #break
         else:
             return element
 

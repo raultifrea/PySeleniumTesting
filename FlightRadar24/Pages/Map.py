@@ -1,8 +1,9 @@
+from selenium.webdriver.common.keys import Keys
+
 from FlightRadar24.Components.Components import Component
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 import time
-
 
 class Defs(Component):
     URL = 'https://www.flightradar24.com'
@@ -72,13 +73,83 @@ class Defs(Component):
     Filter_limit_locator = (By.XPATH, '//*[@id="fr24_FilterSettings"]/div/p')
     Bookmarks_button_locator = (By.XPATH, '//*[@id="fr24_BookmarksMenu"]')
     Bookmarks_list_locator = (By.XPATH, '//*[@id="bookmarks-start"]/div//descendant::li')
+    Bookmarks_Add_tab_locator = (By.XPATH, '//*[@id="fr24_BookmarksDropdown"]/li[1]/ul/li[3]/a')
+    Bookmarks_Add_input_locator = (By.XPATH, '//*[@id="saveViewName"]')
+    Bookmarks_Add_bookmark_locator = (By.XPATH, '//*[@id="saveViewSubmit"]')
+    Bookmarks_Manage_tab_locator = (By.XPATH, "//div[text()='Manage']")
+    Bookmarks_MyBookmarks_list_locator = (By.XPATH, "//*[@class='viewList']//descendant::input")
     Map_Data_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/div[4]/div/div[2]/span')
-    #Map_first_plane_locator = (By.XPATH, "//div[@class='marker_label'][1]")
-    Map_first_plane_locator = (By.XPATH, '//*[@id="menuPlanesValue"]')
+    #Map_nb_of_aircraft_on_map_locator = (By.XPATH, "//div[@class='marker_label'][1]")
+    Map_nb_of_aircraft_on_map_locator = (By.XPATH, '//*[@id="menuPlanesValue"]')
+    Map_search_box_locator = (By.XPATH, '//*[@id="searchBox"]')
+    #Map_search_box_autocomplete_locator = (By.XPATH, '//*[@id="fr24_SearchContainer"]/span')
+    Map_search_box_autocomplete_locator = (By.XPATH, '//span[contains(text(), "navigate")]')
+
+    def get_list_of_my_bookmarks(self):
+        return [bookmark.get_attribute("value") for bookmark in self.driver.find_elements(*self.Bookmarks_MyBookmarks_list_locator)]
+
+    def check_presence_of_new_bookmark(self, item):
+        assert item in self.get_list_of_my_bookmarks(), "The new bookmark has not been added correctly"
 
     @property
-    def first_plane(self):
-        return self.driver.find_element(*self.Map_first_plane_locator)
+    def bookmarks_manage_tab_button(self):
+        return self.driver.find_element(*self.Bookmarks_Manage_tab_locator)
+
+    def click_bookmarks_manage_tab_button(self):
+        self.bookmarks_manage_tab_button.click()
+
+    @property
+    def add_bookmark_button(self):
+        return self.driver.find_element(*self.Bookmarks_Add_bookmark_locator)
+
+    def click_add_bookmark_button(self):
+        self.add_bookmark_button.click()
+
+    @property
+    def bookmarks_add_tab_button(self):
+        return self.driver.find_element(*self.Bookmarks_Add_tab_locator)
+
+    def click_bookmarks_add_tab_button(self):
+        self.bookmarks_add_tab_button.click()
+
+    @property
+    def bookmarks_input_button(self):
+        return self.driver.find_element(*self.Bookmarks_Add_input_locator)
+
+    def send_keys_bookmarks_input_button(self, key: str):
+        '''
+        :param key: the name of the new bookmark in name of a string
+        :return: selects a name for the new bookmark and clicks the Add Bookmark button
+        '''
+        self.bookmarks_input_button.clear()
+        self.bookmarks_input_button.send_keys(key)
+        self.click_add_bookmark_button()
+
+    @property
+    def search_button_autocomplete(self):
+        return self.driver.find_element(*self.Map_search_box_autocomplete_locator)
+
+    @property
+    def search_button(self):
+        return self.driver.find_element(*self.Map_search_box_locator)
+
+    def click_search_button(self):
+        self.search_button.click()
+
+    def perform_search(self, key: str):
+        '''
+        :param key: the string to search for
+        :return: searches for the input string and selects it from autocomplete
+        '''
+        self.search_button.clear()
+        self.search_button.send_keys(key)
+        self.wait_to_load(self.Map_search_box_autocomplete_locator)
+        self.search_button.send_keys(Keys.ENTER)
+        #self.wait_for_text_to_change(self.current_nb_of_aircraft_on_map)
+
+    @property
+    def current_nb_of_aircraft_on_map(self):
+        return self.driver.find_element(*self.Map_nb_of_aircraft_on_map_locator)
 
     @property
     def bookmarks_button(self):
@@ -97,7 +168,7 @@ class Defs(Component):
         for bookmark in self.get_list_of_bookmarks():
             self.click_bookmarks_button()
             bookmark.click()
-            self.wait_for_text_to_change(self.first_plane)
+            self.wait_for_text_to_change(self.current_nb_of_aircraft_on_map)
 
     def get_filter_limit_text(self):
         return self.driver.find_element(*self.Filter_limit_locator).text
@@ -578,7 +649,7 @@ class Defs(Component):
         self.click_email_button()
         self.send_keys_email_button("raoul_tifrea@yahoo.com")
         self.click_password_button()
-        self.send_keys_password_button("nokianseries")
+        self.send_keys_password_button("FlightRadar123!")
         self.click_sign_in_button()
         self.wait_to_load(self.subscription_plan_locator)
 
