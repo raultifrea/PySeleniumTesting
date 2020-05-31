@@ -77,7 +77,8 @@ class Defs(Component):
     Bookmarks_Add_input_locator = (By.XPATH, '//*[@id="saveViewName"]')
     Bookmarks_Add_bookmark_locator = (By.XPATH, '//*[@id="saveViewSubmit"]')
     Bookmarks_Manage_tab_locator = (By.XPATH, "//div[text()='Manage']")
-    Bookmarks_MyBookmarks_list_locator = (By.XPATH, "//*[@class='viewList']//descendant::input")
+    Bookmarks_MyBookmarks_list_locator = (By.XPATH, "//input[@class='viewName renameView']")
+    Bookmarks_MyBookmarks_delete_button_locator = (By.XPATH, ".//following-sibling::a[3]")
     Map_Data_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/div[4]/div/div[2]/span')
     #Map_nb_of_aircraft_on_map_locator = (By.XPATH, "//div[@class='marker_label'][1]")
     Map_nb_of_aircraft_on_map_locator = (By.XPATH, '//*[@id="menuPlanesValue"]')
@@ -86,10 +87,24 @@ class Defs(Component):
     Map_search_box_autocomplete_locator = (By.XPATH, '//span[contains(text(), "navigate")]')
 
     def get_list_of_my_bookmarks(self):
+        return self.driver.find_elements(*self.Bookmarks_MyBookmarks_list_locator)
+
+    def delete_bookmark(self, bookmark: str):
+        '''
+        :param bookmark: the string of the custom bookmark saved by the user
+        :return: deletes the custom bookmark based on its name
+        '''
+        for element in self.get_list_of_my_bookmarks():
+            if element.get_attribute("value") == bookmark:
+                element.find_element(*self.Bookmarks_MyBookmarks_delete_button_locator).click()
+                self.driver.switch_to.alert.accept()
+            #add else
+
+    def get_list_of_my_bookmarks_values(self):
         return [bookmark.get_attribute("value") for bookmark in self.driver.find_elements(*self.Bookmarks_MyBookmarks_list_locator)]
 
     def check_presence_of_new_bookmark(self, item):
-        assert item in self.get_list_of_my_bookmarks(), "The new bookmark has not been added correctly"
+        assert item in self.get_list_of_my_bookmarks_values(), "The new bookmark has not been added correctly"
 
     @property
     def bookmarks_manage_tab_button(self):
