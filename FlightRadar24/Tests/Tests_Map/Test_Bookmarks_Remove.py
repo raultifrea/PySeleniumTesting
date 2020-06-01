@@ -4,7 +4,7 @@ import unittest, time
 
 class TestBookmarksRemove(unittest.TestCase):
 
-    search = 'Romania'
+    search = 'Schiphol'
 
     def testBookmarksRemove(self):
 
@@ -13,8 +13,8 @@ class TestBookmarksRemove(unittest.TestCase):
         test.load()
         test.login()
         test.click_bookmarks_button()
+
         test.click_bookmarks_manage_tab_button()
-        test.delete_bookmark(self.search)
-
-
+        test.manipulate_bookmark(self.search)
+        time.sleep(5)
         test.quit()

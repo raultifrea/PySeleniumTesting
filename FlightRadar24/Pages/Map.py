@@ -79,6 +79,8 @@ class Defs(Component):
     Bookmarks_Manage_tab_locator = (By.XPATH, "//div[text()='Manage']")
     Bookmarks_MyBookmarks_list_locator = (By.XPATH, "//input[@class='viewName renameView']")
     Bookmarks_MyBookmarks_delete_button_locator = (By.XPATH, ".//following-sibling::a[3]")
+    Bookmarks_MyBookmarks_movedown_button_locator = (By.XPATH, ".//following-sibling::a[2]")
+    Bookmarks_MyBookmarks_moveup_button_locator = (By.XPATH, ".//following-sibling::a[1]")
     Map_Data_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/div[4]/div/div[2]/span')
     #Map_nb_of_aircraft_on_map_locator = (By.XPATH, "//div[@class='marker_label'][1]")
     Map_nb_of_aircraft_on_map_locator = (By.XPATH, '//*[@id="menuPlanesValue"]')
@@ -89,22 +91,40 @@ class Defs(Component):
     def get_list_of_my_bookmarks(self):
         return self.driver.find_elements(*self.Bookmarks_MyBookmarks_list_locator)
 
-    def delete_bookmark(self, bookmark: str):
+    def click_delete_bookmark(self, item):
+        item.find_element(*self.Bookmarks_MyBookmarks_delete_button_locator).click()
+        self.driver.switch_to.alert.accept()
+
+    def click_moveup_bookmark(self, item):
+        item.find_element(*self.Bookmarks_MyBookmarks_moveup_button_locator).click()
+
+    def click_movedown_bookmark(self, item):
+        item.find_element(*self.Bookmarks_MyBookmarks_movedown_button_locator).click()
+
+    def manipulate_bookmark(self, bookmark: str):
         '''
         :param bookmark: the string of the custom bookmark saved by the user
-        :return: deletes the custom bookmark based on its name
+        :return: deletes the custom bookmark based on its name, if it's available
         '''
-        for element in self.get_list_of_my_bookmarks():
-            if element.get_attribute("value") == bookmark:
-                element.find_element(*self.Bookmarks_MyBookmarks_delete_button_locator).click()
-                self.driver.switch_to.alert.accept()
-            #add else
+        try:
+            self.check_presence_of_bookmark(bookmark)
+            for element in self.get_list_of_my_bookmarks():
+                if element.get_attribute("value") == bookmark:
+                    # element.find_element(*self.Bookmarks_MyBookmarks_delete_button_locator).click()
+                    # self.driver.switch_to.alert.accept()
+                    self.click_moveup_bookmark(element)
+        except AssertionError:
+            print("There is no bookmark under that name")
 
     def get_list_of_my_bookmarks_values(self):
         return [bookmark.get_attribute("value") for bookmark in self.driver.find_elements(*self.Bookmarks_MyBookmarks_list_locator)]
 
-    def check_presence_of_new_bookmark(self, item):
-        assert item in self.get_list_of_my_bookmarks_values(), "The new bookmark has not been added correctly"
+    def check_presence_of_bookmark(self, item):
+        '''
+        :param item: the value of the bookmark to be checked
+        :return: checks whether the value is listed within a list of values of all custom bookmark web elements
+        '''
+        assert item in self.get_list_of_my_bookmarks_values(), "This bookmark is not available"
 
     @property
     def bookmarks_manage_tab_button(self):
