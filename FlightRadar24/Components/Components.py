@@ -1,9 +1,10 @@
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
-
+import time
 
 class Component:
 
@@ -17,9 +18,11 @@ class Component:
         '''
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
 
-    def text_to_be_present_in_element(self, locator, text):
-        #not used
-        WebDriverWait(self.driver, 10).until(EC.text_to_be_present_in_element(locator, text))
+    def wait_for_element_to_be_clickable(self, locator1, locator2):
+        try:
+            WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable(locator1))
+        except TimeoutException:
+            WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable(locator2))
 
     def wait_for_text_to_change(self, element: WebElement):
         '''

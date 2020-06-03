@@ -85,8 +85,18 @@ class Defs(Component):
     #Map_nb_of_aircraft_on_map_locator = (By.XPATH, "//div[@class='marker_label'][1]")
     Map_nb_of_aircraft_on_map_locator = (By.XPATH, '//*[@id="menuPlanesValue"]')
     Map_search_box_locator = (By.XPATH, '//*[@id="searchBox"]')
-    #Map_search_box_autocomplete_locator = (By.XPATH, '//*[@id="fr24_SearchContainer"]/span')
     Map_search_box_autocomplete_locator = (By.XPATH, '//span[contains(text(), "navigate")]')
+    Map_airport_pins_locator = (By.XPATH, "//div[contains(@title,'Airport')]//img")
+    Map_airport_reviews_locator = (By.XPATH, "//div[@class='reviews']")
+    Map_airport_photo_locator = (By.XPATH, '//*[@id="mapStaticOverlays"]/div[5]/section[3]/a')
+
+    def get_list_of_airport_pins(self):
+        return self.driver.find_elements(*self.Map_airport_pins_locator)
+
+    def click_airport_pins(self):
+        for element in self.get_list_of_airport_pins():
+            self.driver.execute_script("arguments[0].click()", element)
+            self.wait_for_element_to_be_clickable(self.Map_airport_reviews_locator, self.Map_airport_photo_locator)
 
     def get_list_of_my_bookmarks(self):
         return self.driver.find_elements(*self.Bookmarks_MyBookmarks_list_locator)
@@ -101,8 +111,9 @@ class Defs(Component):
     def click_movedown_bookmark(self, item):
         item.find_element(*self.Bookmarks_MyBookmarks_movedown_button_locator).click()
 
-    def manipulate_bookmark(self, bookmark: str):
+    def manipulate_bookmark(self, bookmark: str, func):
         '''
+        :param func: the function to be passed (delete, moveup, movedown)
         :param bookmark: the string of the custom bookmark saved by the user
         :return: deletes the custom bookmark based on its name, if it's available
         '''
@@ -110,9 +121,8 @@ class Defs(Component):
             self.check_presence_of_bookmark(bookmark)
             for element in self.get_list_of_my_bookmarks():
                 if element.get_attribute("value") == bookmark:
-                    # element.find_element(*self.Bookmarks_MyBookmarks_delete_button_locator).click()
-                    # self.driver.switch_to.alert.accept()
-                    self.click_moveup_bookmark(element)
+                    func(element)
+                    time.sleep(3)
         except AssertionError:
             print("There is no bookmark under that name")
 
@@ -283,7 +293,7 @@ class Defs(Component):
 
     def check_filter_functionality(self, filter_type, text='', inout=''):
         '''
-        :param filter_type: the selected filter tpye from the dropdown list
+        :param filter_type: the selected filter type from the dropdown list
         :param text: the input text for the selected filter. if filter is of slider type, do not fill
         :param inout: parameter if the filter_type is 'airport'. Can be either 'in or 'out'. Optional
         :return: checks whether the applied filter is saved and checks either the input text (for input field filters)
