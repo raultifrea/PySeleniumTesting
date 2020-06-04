@@ -89,11 +89,82 @@ class Defs(Component):
     Map_airport_pins_locator = (By.XPATH, "//div[contains(@title,'Airport')]//img")
     Map_airport_reviews_locator = (By.XPATH, "//div[@class='reviews']")
     Map_airport_photo_locator = (By.XPATH, '//*[@id="mapStaticOverlays"]/div[5]/section[3]/a')
+    Map_playback_button_locator = (By.XPATH, '//*[@id="playbackButton"]')
+    Map_playback_date_button_locator = (By.XPATH, '//*[@id="playback-date"]')
+    Map_playback_date_dropdown_list_locator = (By.XPATH, '//*[@id="fr24_PlaybackSettings"]/div/div[1]/ul//descendant::span')
+    Map_playback_hour_button_locator = (By.XPATH, '//*[@id="playback-hour"]')
+    Map_playback_hour_dropdown_list_locator = (By.XPATH, '//*[@id="fr24_PlaybackSettings"]/div/div[3]/div[2]/ul//descendant::span')
+    Map_playback_minute_button_locator = (By.XPATH, '//*[@id="playback-minute"]')
+    Map_playback_minute_dropdown_list_locator = (By.XPATH, '//*[@id="fr24_PlaybackSettings"]/div/div[3]/div[1]/ul//descendant::span')
+    Map_playback_speed_button_locator = (By.XPATH, '//*[@id="playback-speed"]')
+    Map_playback_speed_dropdown_list_locator = (By.XPATH, '//*[@id="fr24_PlaybackSettings"]/div/div[5]/ul//descendant::span')
+    Map_playback_start_button_locator = (By.XPATH, '//*[@id="playback-start"]')
+    Map_playback_controls_overlay_locator = (By.XPATH, '//*[@id="playbackControlsOverlay"]')
+
+    @property
+    def playback_start_button(self):
+        return self.driver.find_element(*self.Map_playback_start_button_locator)
+
+    def click_playback_start_button(self):
+        self.playback_start_button.click()
+
+    def wait_for_playback_controls_overlay(self):
+        self.wait_to_load(self.Map_playback_controls_overlay_locator)
+
+    @property
+    def playback_speed_button(self):
+        return self.driver.find_element(*self.Map_playback_speed_button_locator)
+
+    def click_playback_speed_button(self):
+        self.playback_speed_button.click()
+
+    def get_list_of_playback_speeds(self):
+        return self.driver.find_elements(*self.Map_playback_speed_dropdown_list_locator)
+
+    @property
+    def playback_minute_button(self):
+        return self.driver.find_element(*self.Map_playback_minute_button_locator)
+
+    def click_playback_minute_button(self):
+        self.playback_minute_button.click()
+
+    def get_list_of_playback_minutes(self):
+        return self.driver.find_elements(*self.Map_playback_minute_dropdown_list_locator)
+
+    @property
+    def playback_hour_button(self):
+        return self.driver.find_element(*self.Map_playback_hour_button_locator)
+
+    def click_playback_hour_button(self):
+        self.playback_hour_button.click()
+
+    def get_list_of_playback_hours(self):
+        return self.driver.find_elements(*self.Map_playback_hour_dropdown_list_locator)
+
+    @property
+    def playback_date_button(self):
+        return self.driver.find_element(*self.Map_playback_date_button_locator)
+
+    def click_playback_date_button(self):
+        self.playback_date_button.click()
+
+    def get_list_of_playback_dates(self):
+        return self.driver.find_elements(*self.Map_playback_date_dropdown_list_locator)
+
+    @property
+    def playback_button(self):
+        return self.driver.find_element(*self.Map_playback_button_locator)
+
+    def click_playback_button(self):
+        self.playback_button.click()
 
     def get_list_of_airport_pins(self):
         return self.driver.find_elements(*self.Map_airport_pins_locator)
 
     def click_airport_pins(self):
+        '''
+        :return: clicks each airport pin once it's fully loaded
+        '''
         for element in self.get_list_of_airport_pins():
             self.driver.execute_script("arguments[0].click()", element)
             self.wait_for_element_to_be_clickable(self.Map_airport_reviews_locator, self.Map_airport_photo_locator)
