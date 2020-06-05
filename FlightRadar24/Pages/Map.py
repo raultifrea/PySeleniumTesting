@@ -103,6 +103,62 @@ class Defs(Component):
     Map_playback_controls_play_pause_locator = (By.XPATH, '//*[@id="playback-pause"]')
     Map_playback_slidebar_locator = (By.XPATH, '//*[@id="slider-playbackSpeed"]')
     Map_playback_slider_locator = (By.XPATH, '//*[@id="slider-playbackSpeed"]/a')
+    Map_playback_scroll_left_button_locator = (By.XPATH, '//*[@id="playback-scroll-left"]')
+    Map_playback_scroll_right_button_locator = (By.XPATH, '//*[@id="playback-scroll-right"]')
+    Map_playback_zoomin_button_locator = (By.XPATH, '//*[@id="playback-zoomin"]')
+    Map_playback_zoomout_button_locator = (By.XPATH, '//*[@id="playback-zoomout"]')
+    Map_playback_close_button_locator = (By.XPATH, '//*[@id="playback-exit"]')
+    Map_Zoom_In_button_locator = (By.XPATH, '//*[@id="fr24_ZoomIn"]/a')
+    Map_Zoom_Out_button_locator = (By.XPATH, '//*[@id="fr24_ZoomOut"]/a')
+
+    @property
+    def zoom_in_button(self):
+        return self.driver.find_element(*self.Map_Zoom_In_button_locator)
+
+    def click_zoom_in_button(self):
+        self.zoom_in_button.click()
+
+    @property
+    def zoom_out_button(self):
+        return self.driver.find_element(*self.Map_Zoom_Out_button_locator)
+
+    def click_zoom_out_button(self):
+        self.zoom_out_button.click()
+
+    @property
+    def playback_close_button(self):
+        return self.driver.find_element(*self.Map_playback_close_button_locator)
+
+    def click_playback_close_button(self):
+        self.playback_close_button.click()
+
+    @property
+    def playback_zoomin_button(self):
+        return self.driver.find_element(*self.Map_playback_zoomin_button_locator)
+
+    def click_playback_zoomin_button(self):
+        self.playback_zoomin_button.click()
+
+    @property
+    def playback_zoomout_button(self):
+        return self.driver.find_element(*self.Map_playback_zoomout_button_locator)
+
+    def click_playback_zoomout_button(self):
+        self.playback_zoomout_button.click()
+
+    @property
+    def playback_scroll_left_button(self):
+        return self.driver.find_element(*self.Map_playback_scroll_left_button_locator)
+
+    def click_playback_scroll_left_button(self):
+        self.playback_scroll_left_button.click()
+
+    @property
+    def playback_scroll_right_button(self):
+        return self.driver.find_element(*self.Map_playback_scroll_right_button_locator)
+
+    def click_playback_scroll_right_button(self):
+        self.playback_scroll_right_button.click()
 
     @property
     def playback_slidebar(self):

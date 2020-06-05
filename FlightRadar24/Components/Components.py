@@ -55,3 +55,12 @@ class Component:
         :return: drags and drops the given slider on the slide bar by a given percent integer
         '''
         self.move().click_and_hold(slider).move_by_offset(percent * self.slidebar_width(slidebar) / 100, 0).release().perform()
+
+    def click_button_multiple_times(self, button, times: int):
+        '''
+        :param button: the "click" button to click each time
+        :param times: the number of times to click the button
+        :return: clicks the mentioned button for the mentioned number of times
+        '''
+        for element in range(times):
+            button()
