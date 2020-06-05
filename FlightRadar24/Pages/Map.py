@@ -100,6 +100,24 @@ class Defs(Component):
     Map_playback_speed_dropdown_list_locator = (By.XPATH, '//*[@id="fr24_PlaybackSettings"]/div/div[5]/ul//descendant::span')
     Map_playback_start_button_locator = (By.XPATH, '//*[@id="playback-start"]')
     Map_playback_controls_overlay_locator = (By.XPATH, '//*[@id="playbackControlsOverlay"]')
+    Map_playback_controls_play_pause_locator = (By.XPATH, '//*[@id="playback-pause"]')
+    Map_playback_slidebar_locator = (By.XPATH, '//*[@id="slider-playbackSpeed"]')
+    Map_playback_slider_locator = (By.XPATH, '//*[@id="slider-playbackSpeed"]/a')
+
+    @property
+    def playback_slidebar(self):
+        return self.driver.find_element(*self.Map_playback_slidebar_locator)
+
+    @property
+    def playback_slider(self):
+        return self.driver.find_element(*self.Map_playback_slider_locator)
+
+    @property
+    def playback_play_pause_button(self):
+        return self.driver.find_element(*self.Map_playback_controls_play_pause_locator)
+
+    def click_playback_play_pause_button(self):
+        self.playback_play_pause_button.click()
 
     @property
     def playback_start_button(self):
