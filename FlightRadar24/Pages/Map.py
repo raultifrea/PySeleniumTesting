@@ -110,6 +110,19 @@ class Defs(Component):
     Map_playback_close_button_locator = (By.XPATH, '//*[@id="playback-exit"]')
     Map_Zoom_In_button_locator = (By.XPATH, '//*[@id="fr24_ZoomIn"]/a')
     Map_Zoom_Out_button_locator = (By.XPATH, '//*[@id="fr24_ZoomOut"]/a')
+    Map_Airport_scheduled_flights_locator = (By.XPATH, "//div[@class='pnl-component scheduled-routes-stats flight-data']")
+    Map_Airport_name_locator = (By.XPATH, "//*[@class='pnl-component airport-info appear']//h2//span")
+    Map_Airport_traffic_info_locator = (By.XPATH, "//div[@class='hasTooltip']//span")
+
+    def airport_traffic_info(self):
+        return [x.text for x in self.driver.find_elements(*self.Map_Airport_traffic_info_locator)]
+
+    def airport_name(self):
+        return self.driver.find_element(*self.Map_Airport_name_locator).text
+
+    @property
+    def airport_scheduled_flights_button(self):
+        return self.driver.find_element(*self.Map_Airport_scheduled_flights_locator)
 
     @property
     def zoom_in_button(self):
@@ -242,6 +255,19 @@ class Defs(Component):
         for element in self.get_list_of_airport_pins():
             self.driver.execute_script("arguments[0].click()", element)
             self.wait_for_element_to_be_clickable(self.Map_airport_reviews_locator, self.Map_airport_photo_locator)
+
+    def get_airports_info(self):
+        '''
+        :return: clicks each airport and prints the scheduling traffic info for it
+        '''
+        for element in self.get_list_of_airport_pins():
+            self.driver.execute_script("arguments[0].click()", element)
+            time.sleep(2)
+            print(self.airport_name() + ":")
+            if len(self.airport_traffic_info()) > 0:
+                print(self.airport_traffic_info())
+            else:
+                print("No data available")
 
     def get_list_of_my_bookmarks(self):
         return self.driver.find_elements(*self.Bookmarks_MyBookmarks_list_locator)
@@ -842,6 +868,7 @@ class Defs(Component):
         self.send_keys_password_button("FlightRadar123!")
         self.click_sign_in_button()
         self.wait_to_load(self.subscription_plan_locator)
+        self.wait_for_text_to_change(self.current_nb_of_aircraft_on_map)
 
     def quit(self):
         self.driver.quit()

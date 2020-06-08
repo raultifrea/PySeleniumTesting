@@ -10,7 +10,5 @@ class TestClickAirportPins(unittest.TestCase):
 
         test.load()
         test.login()
-        time.sleep(3)
         test.click_airport_pins()
-        #test.get_list_of_airport_pins()
         test.quit()
