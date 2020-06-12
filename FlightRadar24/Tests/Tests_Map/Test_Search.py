@@ -1,5 +1,5 @@
 from FlightRadar24.Pages.Map import Defs
-import unittest
+import unittest, time
 
 
 class TestSearch(unittest.TestCase):

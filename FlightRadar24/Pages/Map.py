@@ -82,7 +82,6 @@ class Defs(Component):
     Bookmarks_MyBookmarks_movedown_button_locator = (By.XPATH, ".//following-sibling::a[2]")
     Bookmarks_MyBookmarks_moveup_button_locator = (By.XPATH, ".//following-sibling::a[1]")
     Map_Data_locator = (By.XPATH, '//*[@id="map_canvas"]/div/div/div[4]/div/div[2]/span')
-    #Map_nb_of_aircraft_on_map_locator = (By.XPATH, "//div[@class='marker_label'][1]")
     Map_nb_of_aircraft_on_map_locator = (By.XPATH, '//*[@id="menuPlanesValue"]')
     Map_search_box_locator = (By.XPATH, '//*[@id="searchBox"]')
     Map_search_box_autocomplete_locator = (By.XPATH, '//span[contains(text(), "navigate")]')
@@ -113,6 +112,10 @@ class Defs(Component):
     Map_Airport_scheduled_flights_locator = (By.XPATH, "//div[@class='pnl-component scheduled-routes-stats flight-data']")
     Map_Airport_name_locator = (By.XPATH, "//*[@class='pnl-component airport-info appear']//h2//span")
     Map_Airport_traffic_info_locator = (By.XPATH, "//div[@class='hasTooltip']//span")
+    Map_Airports_locator = (By.XPATH, "//div[contains(@title,'Airport')]")
+
+    def get_list_of_airports(self):
+        return self.driver.find_elements(*self.Map_Airports_locator)
 
     def airport_traffic_info(self):
         return [x.text for x in self.driver.find_elements(*self.Map_Airport_traffic_info_locator)]
@@ -261,6 +264,7 @@ class Defs(Component):
         :return: clicks each airport and prints the scheduling traffic info for it
         '''
         for element in self.get_list_of_airport_pins():
+            print("nb of airports in area is "+str(len(self.get_list_of_airport_pins())))
             self.driver.execute_script("arguments[0].click()", element)
             time.sleep(2)
             print(self.airport_name() + ":")
@@ -268,6 +272,24 @@ class Defs(Component):
                 print(self.airport_traffic_info())
             else:
                 print("No data available")
+            #break
+
+    def get_searched_airport_info(self, airport: str):
+        '''
+        :param airport: the airport to be searched for as a string value
+        :return: searches for a specific airport and prints the scheduling traffic infor for it
+        '''
+        for element in self.get_list_of_airports():
+            if airport.title() in element.get_attribute("title"):
+                print(self.airport_name() + ":")
+                if len(self.airport_traffic_info()) > 0:
+                    print(self.airport_traffic_info())
+                else:
+                    print("No data available")
+            else:
+                print("searched item is not in element attribute title")
+                print(element.get_attribute("title"))
+                print(airport.title())
 
     def get_list_of_my_bookmarks(self):
         return self.driver.find_elements(*self.Bookmarks_MyBookmarks_list_locator)
@@ -361,7 +383,7 @@ class Defs(Component):
         self.search_button.send_keys(key)
         self.wait_to_load(self.Map_search_box_autocomplete_locator)
         self.search_button.send_keys(Keys.ENTER)
-        #self.wait_for_text_to_change(self.current_nb_of_aircraft_on_map)
+        time.sleep(3)
 
     @property
     def current_nb_of_aircraft_on_map(self):
