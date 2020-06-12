@@ -118,7 +118,9 @@ class Defs(Component):
         return self.driver.find_elements(*self.Map_Airports_locator)
 
     def airport_traffic_info(self):
-        return [x.text for x in self.driver.find_elements(*self.Map_Airport_traffic_info_locator)]
+        traffic_info = [x.text for x in self.driver.find_elements(*self.Map_Airport_traffic_info_locator)]
+        traffic_info.pop(4)  # duplicate value "X flights" which is already contained in "From - To X flights"
+        return traffic_info
 
     def airport_name(self):
         return self.driver.find_element(*self.Map_Airport_name_locator).text
