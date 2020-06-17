@@ -18,7 +18,7 @@ class Component:
         '''
         WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
 
-    def wait_for_element_to_be_clickable(self, locator1, locator2):
+    def wait_for_element_to_be_clickable(self, locator1, locator2=''):
         try:
             WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable(locator1))
         except TimeoutException:

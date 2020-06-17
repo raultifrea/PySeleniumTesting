@@ -1,7 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 
 from FlightRadar24.Components.Components import Component
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver.common.by import By
 import time
 
@@ -113,6 +113,39 @@ class Defs(Component):
     Map_Airport_name_locator = (By.XPATH, "//*[@class='pnl-component airport-info appear']//h2//span")
     Map_Airport_traffic_info_locator = (By.XPATH, "//div[@class='hasTooltip']//span")
     Map_Airports_locator = (By.XPATH, "//div[contains(@title,'Airport')]")
+    Map_Airplanes_locator = (By.XPATH, "//div[contains(@title,'Airport')]//following-sibling::div[@title='']")
+    Map_Airport_close_button_locator = (By.XPATH, '//*[@id="mapStaticOverlays"]/div[5]/a')
+    Map_Airplane_close_button_locator = (By.XPATH, '//*[@id="mapStaticOverlays"]/div[4]/a')
+
+    @property
+    def airplane_close_button(self):
+        return self.driver.find_element(*self.Map_Airplane_close_button_locator)
+
+    def click_airplane_close_button(self):
+        self.airplane_close_button.click()
+
+    @property
+    def airport_close_button(self):
+        return self.driver.find_element(*self.Map_Airport_close_button_locator)
+
+    def click_airport_close_button(self):
+        self.airport_close_button.click()
+
+    def get_list_of_airplanes(self):
+        return self.driver.find_elements(*self.Map_Airplanes_locator)
+
+    def click_airplanes(self):
+        '''
+        :return: Clicks each visible airplane as long as it's clickable.
+        TO DO: uncheck airport pins before clicking airplanes, check back after
+        '''
+        for element in self.get_list_of_airplanes():
+            try:
+                element.click()
+                time.sleep(2)
+                self.click_airplane_close_button()
+            except WebDriverException:
+                continue
 
     def get_list_of_airports(self):
         return self.driver.find_elements(*self.Map_Airports_locator)
@@ -556,6 +589,18 @@ class Defs(Component):
         self.click_full_screen_button()
         assert 'fullscreenView' in self.get_map_body().get_attribute('class'), 'Full Screen has not been triggered'
 
+    def open_full_screen(self):
+        if "open" in self.full_screen_button.get_attribute("class"):
+            pass
+        else:
+            self.click_full_screen_button()
+
+    def close_full_screen(self):
+        if "open" in self.full_screen_button.get_attribute("class"):
+            self.click_full_screen_button()
+        else:
+            pass
+
     @property
     def home_logo_button(self):
         return self.driver.find_element(*self.fr_home_logo_button_locator)
@@ -893,6 +938,7 @@ class Defs(Component):
         self.click_sign_in_button()
         self.wait_to_load(self.subscription_plan_locator)
         self.wait_for_text_to_change(self.current_nb_of_aircraft_on_map)
+        self.open_full_screen()
 
     def quit(self):
         self.driver.quit()
