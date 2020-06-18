@@ -35,6 +35,7 @@ class Defs(Component):
     Settings_Map_Brightness_slidebar_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/div')
     Settings_Map_Brightness_slider_locator = (By.XPATH, '//*[@id="fr24_Brightness"]/a')
     Settings_Map_toggles_locator = (By.XPATH, "//*[@id='mapsettings']//div[contains(@class,'toggle')]")
+    Settings_Map_Airport_pin_toggle_locator = (By.XPATH, '//*[@id="fr24_showAirports"]')
     Settings_Weather_toggles_locator = (By.XPATH, "//div[contains(@class,'weather-tile toggle')]")
     Settings_Visibility_toggles_locator = (By.XPATH, "//div[@id='visibilitysettings']//*[contains(@class,'toggle ')]")
     Settings_Map_slidebar_locator = (By.XPATH, '//*[@id="fr24_airportDensity"]/div')
@@ -116,6 +117,25 @@ class Defs(Component):
     Map_Airplanes_locator = (By.XPATH, "//div[contains(@title,'Airport')]//following-sibling::div[@title='']")
     Map_Airport_close_button_locator = (By.XPATH, '//*[@id="mapStaticOverlays"]/div[5]/a')
     Map_Airplane_close_button_locator = (By.XPATH, '//*[@id="mapStaticOverlays"]/div[4]/a')
+    Map_Airplane_type_locator = (By.XPATH, "//div[contains(@title,'Designation')]//span[2]")
+    Map_Airplane_registration_locator = (By.XPATH, "//div[contains(@title,'Registration')]//span[2]")
+    Map_Airplane_airline_locator = (By.XPATH, '//section[@data-component="airlineInfo"]//span')
+
+    def get_airplane_airline(self):
+        return self.driver.find_element(*self.Map_Airplane_airline_locator).text
+
+    def get_airplane_registration(self):
+        return self.driver.find_element(*self.Map_Airplane_registration_locator).text
+
+    def get_airplane_type(self):
+        return self.driver.find_element(*self.Map_Airplane_type_locator).text
+
+    @property
+    def airport_pin_toggle_button(self):
+        return self.driver.find_element(*self.Settings_Map_Airport_pin_toggle_locator)
+
+    def click_airport_pin_toggle_button(self):
+        self.airport_pin_toggle_button.click()
 
     @property
     def airplane_close_button(self):
@@ -139,10 +159,12 @@ class Defs(Component):
         :return: Clicks each visible airplane as long as it's clickable.
         TO DO: uncheck airport pins before clicking airplanes, check back after
         '''
+        print("Airline Name\tAirplane Type\tAirplane Registration\n")
         for element in self.get_list_of_airplanes():
             try:
                 element.click()
                 time.sleep(2)
+                print(self.get_airplane_airline()+"\t"+self.get_airplane_type()+"\t"+self.get_airplane_registration())
                 self.click_airplane_close_button()
             except WebDriverException:
                 continue
@@ -937,7 +959,7 @@ class Defs(Component):
         self.send_keys_password_button("FlightRadar123!")
         self.click_sign_in_button()
         self.wait_to_load(self.subscription_plan_locator)
-        self.wait_for_text_to_change(self.current_nb_of_aircraft_on_map)
+        #self.wait_for_text_to_change(self.current_nb_of_aircraft_on_map)
         self.open_full_screen()
 
     def quit(self):

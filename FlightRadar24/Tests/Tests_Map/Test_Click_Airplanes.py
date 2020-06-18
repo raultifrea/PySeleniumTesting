@@ -11,9 +11,10 @@ class TestClickAirplanes(unittest.TestCase):
         test.load()
         test.login()
 
+
         test.perform_search("cluj")
         test.click_airport_close_button()
-        time.sleep(3)
+
 
 
         test.click_airplanes()
