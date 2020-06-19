@@ -121,6 +121,13 @@ class Defs(Component):
     Map_Airplane_registration_locator = (By.XPATH, "//div[contains(@title,'Registration')]//span[2]")
     Map_Airplane_airline_locator = (By.XPATH, '//section[@data-component="airlineInfo"]//span')
 
+    @property
+    def about_button(self):
+        return self.driver.find_element(*self.About_locator)
+
+    def click_about_button(self):
+        self.about_button.click()
+
     def get_airplane_airline(self):
         return self.driver.find_element(*self.Map_Airplane_airline_locator).text
 
@@ -949,7 +956,9 @@ class Defs(Component):
     def load(self):
         self.driver.maximize_window()
         self.driver.get(self.URL)
-        self.driver.find_element(*self.About_locator).click()
+        self.wait_for_element_to_be_clickable(self.About_locator)
+        self.click_about_button()
+        #self.driver.find_element(*self.About_locator).click()
 
     def login(self):
         self.click_login_button()
