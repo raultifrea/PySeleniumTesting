@@ -120,6 +120,11 @@ class Defs(Component):
     Map_Airplane_type_locator = (By.XPATH, "//div[contains(@title,'Designation')]//span[2]")
     Map_Airplane_registration_locator = (By.XPATH, "//div[contains(@title,'Registration')]//span[2]")
     Map_Airplane_airline_locator = (By.XPATH, '//section[@data-component="airlineInfo"]//span')
+    Map_Airplane_Destinations_locator = (By.XPATH, "//*[@data-component='flightInfo']//a")
+
+    def get_airplane_from_to(self):
+        from_to = [element.text for element in self.driver.find_elements(*self.Map_Airplane_Destinations_locator)]
+        return " ".join(from_to)
 
     @property
     def about_button(self):
@@ -166,12 +171,12 @@ class Defs(Component):
         :return: Clicks each visible airplane as long as it's clickable.
         TO DO: uncheck airport pins before clicking airplanes, check back after
         '''
-        print("Airline Name\tAirplane Type\tAirplane Registration\n")
+        print("Airline Name\tAirplane Type\tAirplane Registration\tFrom\tTo\n")
         for element in self.get_list_of_airplanes():
             try:
                 element.click()
                 time.sleep(2)
-                print(self.get_airplane_airline()+"\t"+self.get_airplane_type()+"\t"+self.get_airplane_registration())
+                print(self.get_airplane_airline()+"\t"+self.get_airplane_type()+"\t"+self.get_airplane_registration()+"\t"+self.get_airplane_from_to())
                 self.click_airplane_close_button()
             except WebDriverException:
                 continue

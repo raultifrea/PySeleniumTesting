@@ -1,5 +1,5 @@
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
+import unittest
 
 
 class TestClickAirplanes(unittest.TestCase):
@@ -10,14 +10,10 @@ class TestClickAirplanes(unittest.TestCase):
 
         test.load()
         test.login()
-
-
         test.perform_search("cluj")
+
         test.click_airport_close_button()
-
-
-
         test.click_airplanes()
-
         test.close_full_screen()
+
         test.quit()
