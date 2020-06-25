@@ -1,5 +1,5 @@
 from selenium.webdriver.common.keys import Keys
-
+from tabulate import tabulate
 from FlightRadar24.Components.Components import Component
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver.common.by import By
@@ -123,6 +123,9 @@ class Defs(Component):
     Map_Airplane_Destinations_locator = (By.XPATH, "//*[@data-component='flightInfo']//a")
 
     def get_airplane_from_to(self):
+        '''
+        :return: returns the strings representing the Start Airport and Destination Airport with a whitespace in between
+        '''
         from_to = [element.text for element in self.driver.find_elements(*self.Map_Airplane_Destinations_locator)]
         return " ".join(from_to)
 
@@ -167,19 +170,25 @@ class Defs(Component):
         return self.driver.find_elements(*self.Map_Airplanes_locator)
 
     def click_airplanes(self):
+        airports_info = []
         '''
-        :return: Clicks each visible airplane as long as it's clickable.
-        TO DO: uncheck airport pins before clicking airplanes, check back after
+        :return: Clicks each visible airplane as long as it's clickable and prints the information of the plane
+        in the shape of a table.
         '''
-        print("Airline Name\tAirplane Type\tAirplane Registration\tFrom\tTo\n")
         for element in self.get_list_of_airplanes():
             try:
+                airport_detail = []
                 element.click()
                 time.sleep(2)
-                print(self.get_airplane_airline()+"\t"+self.get_airplane_type()+"\t"+self.get_airplane_registration()+"\t"+self.get_airplane_from_to())
+                airport_detail.append(self.get_airplane_airline())
+                airport_detail.append(self.get_airplane_type())
+                airport_detail.append(self.get_airplane_registration())
+                airport_detail.append(self.get_airplane_from_to())
+                airports_info.append(airport_detail)
                 self.click_airplane_close_button()
             except WebDriverException:
                 continue
+        print(tabulate(airports_info, headers=["Airline Name", "Airplane Type", "Airplane Registration", "From", "To"], tablefmt="fancy_grid"))
 
     def get_list_of_airports(self):
         return self.driver.find_elements(*self.Map_Airports_locator)
