@@ -121,13 +121,25 @@ class Defs(Component):
     Map_Airplane_registration_locator = (By.XPATH, "//div[contains(@title,'Registration')]//span[2]")
     Map_Airplane_airline_locator = (By.XPATH, '//section[@data-component="airlineInfo"]//span')
     Map_Airplane_Destinations_locator = (By.XPATH, "//*[@data-component='flightInfo']//a")
+    Map_Airplane_Destinations_Details_locator = (By.XPATH, "//*[@data-component='flightInfo']//h3")
+    Map_Airplane_age_locator = (By.XPATH, "//div[@title='Age of the Aircraft']/span[2]")
 
-    def get_airplane_from_to(self):
+    def get_airplane_age(self):
+        return self.driver.find_element(*self.Map_Airplane_age_locator).text
+
+    def get_airplane_detail_route(self):
+        return self.driver.find_elements(*self.Map_Airplane_Destinations_Details_locator)
+
+    def get_airplane_simple_route(self):
+        return self.driver.find_elements(*self.Map_Airplane_Destinations_locator)
+
+    def get_airplane_route(self, route_list):
         '''
-        :return: returns the strings representing the Start Airport and Destination Airport with a whitespace in between
+        :type route_list: the list of elements to get From and To
+        :return: returns the strings representing the Start Airport and Destination Airport and joins them
         '''
-        from_to = [element.text for element in self.driver.find_elements(*self.Map_Airplane_Destinations_locator)]
-        return " ".join(from_to)
+        from_to = [element.text for element in route_list]
+        return " - ".join(from_to)
 
     @property
     def about_button(self):
@@ -169,7 +181,7 @@ class Defs(Component):
     def get_list_of_airplanes(self):
         return self.driver.find_elements(*self.Map_Airplanes_locator)
 
-    def click_airplanes(self):
+    def get_airplanes_info(self):
         airports_info = []
         '''
         :return: Clicks each visible airplane as long as it's clickable and prints the information of the plane
@@ -183,12 +195,14 @@ class Defs(Component):
                 airport_detail.append(self.get_airplane_airline())
                 airport_detail.append(self.get_airplane_type())
                 airport_detail.append(self.get_airplane_registration())
-                airport_detail.append(self.get_airplane_from_to())
+                airport_detail.append(self.get_airplane_age())
+                airport_detail.append(self.get_airplane_route(self.get_airplane_simple_route()))
+                airport_detail.append(self.get_airplane_route(self.get_airplane_detail_route()))
                 airports_info.append(airport_detail)
                 self.click_airplane_close_button()
             except WebDriverException:
                 continue
-        print(tabulate(airports_info, headers=["Airline Name", "Airplane Type", "Airplane Registration", "From", "To"], tablefmt="fancy_grid"))
+        print(tabulate(airports_info, headers=["Airline Name", "Type", "Registration", "Age", "Route", "Detailed Route"], tablefmt="fancy_grid"))
 
     def get_list_of_airports(self):
         return self.driver.find_elements(*self.Map_Airports_locator)

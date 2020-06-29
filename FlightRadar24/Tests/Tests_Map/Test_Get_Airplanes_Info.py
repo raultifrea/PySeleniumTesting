@@ -2,18 +2,20 @@ from FlightRadar24.Pages.Map import Defs
 import unittest
 
 
-class TestClickAirplanes(unittest.TestCase):
+class TestGetAirplanesInfo(unittest.TestCase):
 
-    def testClickAirplanes(self):
+    City = 'constanta'
+
+    def testGetAirplanesInfo(self):
 
         test = Defs()
 
         test.load()
         test.login()
-        test.perform_search("cluj")
+        test.perform_search(self.City)
 
         test.click_airport_close_button()
-        test.click_airplanes()
+        test.get_airplanes_info()
         test.close_full_screen()
 
         test.quit()
