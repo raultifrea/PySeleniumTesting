@@ -4,7 +4,7 @@ import unittest
 
 class TestGetAirplanesInfo(unittest.TestCase):
 
-    City = 'constanta'
+    City = 'kyiv'
 
     def testGetAirplanesInfo(self):
 

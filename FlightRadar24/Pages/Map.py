@@ -192,12 +192,10 @@ class Defs(Component):
                 airport_detail = []
                 element.click()
                 time.sleep(2)
-                airport_detail.append(self.get_airplane_airline())
-                airport_detail.append(self.get_airplane_type())
-                airport_detail.append(self.get_airplane_registration())
-                airport_detail.append(self.get_airplane_age())
-                airport_detail.append(self.get_airplane_route(self.get_airplane_simple_route()))
-                airport_detail.append(self.get_airplane_route(self.get_airplane_detail_route()))
+                airport_detail.extend([self.get_airplane_airline(), self.get_airplane_type(),
+                                       self.get_airplane_registration(), self.get_airplane_age(),
+                                       self.get_airplane_route(self.get_airplane_simple_route()),
+                                       self.get_airplane_route(self.get_airplane_detail_route())])
                 airports_info.append(airport_detail)
                 self.click_airplane_close_button()
             except WebDriverException:
