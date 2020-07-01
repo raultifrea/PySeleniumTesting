@@ -200,7 +200,7 @@ class Defs(Component):
                 self.click_airplane_close_button()
             except WebDriverException:
                 continue
-        print(tabulate(airports_info, headers=["Airline Name", "Type", "Registration", "Age", "Route", "Detailed Route"], tablefmt="fancy_grid"))
+        print(tabulate(sorted(airports_info), headers=["Airline Name", "Type", "Registration", "Age", "Route", "Detailed Route"], tablefmt="fancy_grid"))
 
     def get_list_of_airports(self):
         return self.driver.find_elements(*self.Map_Airports_locator)
