@@ -984,7 +984,6 @@ class Defs(Component):
         self.driver.get(self.URL)
         self.wait_for_element_to_be_clickable(self.About_locator)
         self.click_about_button()
-        #self.driver.find_element(*self.About_locator).click()
 
     def login(self):
         self.click_login_button()
