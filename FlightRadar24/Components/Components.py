@@ -4,12 +4,16 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
-import time
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 class Component:
 
     def __init__(self):
-        self.driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+
 
     def wait_to_load(self, locator):
         '''
