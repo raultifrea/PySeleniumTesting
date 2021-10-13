@@ -649,6 +649,7 @@ class Defs(Component):
             pass
         else:
             self.click_full_screen_button()
+        assert "open" in self.full_screen_button.get_attribute("class"), "Fullscreen mode was not activated correctly"
 
     def close_full_screen(self):
         if "open" in self.full_screen_button.get_attribute("class"):

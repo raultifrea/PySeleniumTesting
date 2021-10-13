@@ -2,10 +2,13 @@ from FlightRadar24.Pages.Map import Defs
 import unittest
 
 
-class TestLogin(unittest.TestCase):
+class TestURL(unittest.TestCase):
 
     def testURL(self):
         test = Defs()
         test.load()
-        test.login()
         test.quit()
+
+
+# if __name__ == '__main__':
+#     unittest.main()

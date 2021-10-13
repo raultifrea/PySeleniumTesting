@@ -11,9 +11,9 @@ class Component:
 
     def __init__(self):
         options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
         options.binary_location = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
-        self.driver = webdriver.Chrome(ChromeDriverManager().install())
-
+        self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
     def wait_to_load(self, locator):
         '''
@@ -29,7 +29,6 @@ class Component:
             WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable(locator2))
 
     def wait_for_text_to_change(self, element: WebElement):
-
         original_value = element.text
         while original_value == element.text:
             WebDriverWait(self.driver, 10)
