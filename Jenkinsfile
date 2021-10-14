@@ -7,8 +7,9 @@ pipeline {
         }
         stage('Run tests') {
             echo 'Running pytests'
-            def run_test_command = 'python -m pytest'
-            bat '${run_test_command}'
+           // def run_test_command = 'python -m pytest'
+            //bat '${run_test_command}'
+            bat 'python -m pytest'
         }      
     }
 }
