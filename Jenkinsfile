@@ -3,13 +3,15 @@ pipeline {
 
     stages {
         stage('Hello') {
-            echo 'Hello World'
+            steps {
+                echo 'Hello World'
+            }
         }
         stage('Run tests') {
-            echo 'Running pytests'
-           // def run_test_command = 'python -m pytest'
-            //bat '${run_test_command}'
-            bat 'python -m pytest'
-        }      
+            steps {
+                echo 'Running tests'
+                bat 'python -m pytest'
+            }
+        }
     }
 }
