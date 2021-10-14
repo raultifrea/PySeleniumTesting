@@ -20,7 +20,7 @@ class Defs(Component):
         self.driver.get(self.URL)
         self.wait_for_element_to_be_clickable(self.About_locator)
         self.click_about_button()
-        self.click_summer_popup_close_button()
+        # self.click_summer_popup_close_button()
 
     def get_list_of_az_buttons(self):
         return self.driver.find_elements(*self.AZ_buttons_locator)

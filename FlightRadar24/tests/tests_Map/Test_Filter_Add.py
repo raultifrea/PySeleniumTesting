@@ -1,9 +1,10 @@
+import time
+import unittest
+
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
 
 
 class TestFilterAdd(unittest.TestCase):
-
     filter_type = 'altitude'
     '''
     filter type can be: callsign (e.g. SAS107), airport (e.g CLJ), altitude (km), speed (km/h)
@@ -13,7 +14,6 @@ class TestFilterAdd(unittest.TestCase):
     inout = ''
 
     def testFilterAdd(self):
-
         test = Defs()
         test.load()
         test.login()

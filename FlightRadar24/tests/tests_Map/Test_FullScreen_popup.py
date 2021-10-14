@@ -1,11 +1,13 @@
-from FlightRadar24.Pages.Map import Defs
 import unittest
 
-class TestFullScreenPopup(unittest.TestCase):
+from FlightRadar24.Pages.Map import Defs
 
+
+class TestFullScreenPopup(unittest.TestCase):
     title = 'Full-screen view'
 
     def testFullScreenPopup(self):
+        # deprecated
 
         test = Defs()
         test.load()

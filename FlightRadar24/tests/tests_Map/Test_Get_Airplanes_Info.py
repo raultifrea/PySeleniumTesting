@@ -1,13 +1,12 @@
-from FlightRadar24.Pages.Map import Defs
 import unittest
+
+from FlightRadar24.Pages.Map import Defs
 
 
 class TestGetAirplanesInfo(unittest.TestCase):
-
     City = 'cluj'
 
     def testGetAirplanesInfo(self):
-
         test = Defs()
 
         test.load()

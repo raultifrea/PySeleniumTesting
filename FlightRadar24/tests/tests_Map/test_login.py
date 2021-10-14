@@ -1,5 +1,6 @@
-from FlightRadar24.Pages.Map import Defs
 import unittest
+
+from FlightRadar24.Pages.Map import Defs
 
 
 class TestLogin(unittest.TestCase):

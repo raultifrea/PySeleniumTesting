@@ -1,8 +1,9 @@
-from FlightRadar24.Pages.Airlines import Defs
 import unittest
 
-class TestNumberOfAircraftPerAirline(unittest.TestCase):
+from FlightRadar24.Pages.Airlines import Defs
 
+
+class TestNumberOfAircraftPerAirline(unittest.TestCase):
     airline = "Tarom"
 
     def testNumberOfAircraftPerAirline(self):

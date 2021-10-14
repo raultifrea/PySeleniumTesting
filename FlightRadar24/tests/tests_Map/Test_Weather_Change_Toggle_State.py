@@ -1,9 +1,9 @@
+import unittest
+
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
 
 
 class TestWeatherChangeToggleState(unittest.TestCase):
-
     Title = ["Cloud", "Total precipitation", "Intense precipitation", "North American radar", "Australian radar",
              "Lightning", "AIRMETs/SIGMETs", "High level significant weather"]
 

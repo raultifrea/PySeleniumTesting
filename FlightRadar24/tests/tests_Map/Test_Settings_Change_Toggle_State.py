@@ -1,9 +1,9 @@
-from FlightRadar24.Pages.Map import Defs
 import unittest
+
+from FlightRadar24.Pages.Map import Defs
 
 
 class TestSettingsChangeToggleState(unittest.TestCase):
-
     Title = ["Oceanic tracks"]
 
     def testSettingsChangeToggleState(self):

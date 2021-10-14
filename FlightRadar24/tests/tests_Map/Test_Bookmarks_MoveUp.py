@@ -1,13 +1,12 @@
+import unittest
+
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
 
 
 class TestBookmarksMoveUp(unittest.TestCase):
-
     search = 'Schiphol'
 
     def testBookmarksMoveUp(self):
-
         test = Defs()
 
         test.load()

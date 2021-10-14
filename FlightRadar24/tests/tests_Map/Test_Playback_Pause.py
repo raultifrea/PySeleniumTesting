@@ -1,5 +1,7 @@
+import time
+import unittest
+
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
 
 
 class TestPlaybackPausePlay(unittest.TestCase):

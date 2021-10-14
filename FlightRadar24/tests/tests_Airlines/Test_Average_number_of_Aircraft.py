@@ -1,5 +1,7 @@
-from FlightRadar24.Pages.Airlines import Defs
 import unittest
+
+from FlightRadar24.Pages.Airlines import Defs
+
 
 class TestAverageNumberOfAircraft(unittest.TestCase):
 

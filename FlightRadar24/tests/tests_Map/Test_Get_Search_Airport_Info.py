@@ -1,13 +1,13 @@
+import time
+import unittest
+
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
 
 
 class TestGetSearchAirportInfo(unittest.TestCase):
-
     Airport = "malmo"
 
     def testGetSearchAirportInfo(self):
-
         test = Defs()
         test.load()
         test.login()

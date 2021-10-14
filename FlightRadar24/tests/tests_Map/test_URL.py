@@ -1,5 +1,6 @@
-from FlightRadar24.Pages.Map import Defs
 import unittest
+
+from FlightRadar24.Pages.Map import Defs
 
 
 class TestURL(unittest.TestCase):
@@ -8,7 +9,6 @@ class TestURL(unittest.TestCase):
         test = Defs()
         test.load()
         test.quit()
-
 
 # if __name__ == '__main__':
 #     unittest.main()

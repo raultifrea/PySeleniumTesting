@@ -56,6 +56,9 @@ class Defs(Component):
     fr_home_logo_button_locator = (By.XPATH, "//*[@class='logo-fr24-flat']")
     FullScreen_button_locator = (By.XPATH, '//button[@title="Full screen options"]')
     FullScreen_upgrade_popup_title_locator = (By.XPATH, '//*[@id="ui-id-2"]/h2')
+    Switch_full_screen_mode_button_locator = (By.XPATH, '//button[@title="Switch browser window to full screen mode"]')
+    Hide_full_screen_options_button_locator = (By.XPATH, "//button[contains(@class, 'hide-button')]")
+    Hide_top_menu_bar_button_locator = (By.XPATH, '//button[@title="Hide top menu bar"]')
     Map_Body_locator = (By.XPATH, '//*[@id="map"]')
     Filter_button_locator = (By.XPATH, '//*[@id="fr24_FiltersMenu"]')
     Filter_toggle_locator = (By.XPATH, '//*[@id="fr24_enableFilters"]')
@@ -623,6 +626,27 @@ class Defs(Component):
     def click_full_screen_button(self):
         self.full_screen_button.click()
 
+    @property
+    def switch_full_screen_button(self):
+        return self.driver.find_element(*self.Switch_full_screen_mode_button_locator)
+
+    def click_switch_full_screen_button(self):
+        self.switch_full_screen_button.click()
+
+    @property
+    def hide_full_screen_options_button(self):
+        return self.driver.find_element(*self.Hide_full_screen_options_button_locator)
+
+    def click_hide_full_screen_options_button(self):
+        self.hide_full_screen_options_button.click()
+
+    @property
+    def hide_top_menu_bar_button(self):
+        return self.driver.find_element(*self.Hide_top_menu_bar_button_locator)
+
+    def click_hide_top_menu_bar_button(self):
+        self.hide_top_menu_bar_button.click()
+
     def get_full_screen_popup_title_text(self):
         return self.driver.find_element(*self.FullScreen_upgrade_popup_title_locator).text
 
@@ -632,6 +656,9 @@ class Defs(Component):
         :return: checks whether the title is correct in the full screen upgrade popup
         '''
         self.click_full_screen_button()
+        self.click_switch_full_screen_button()
+        self.click_hide_top_menu_bar_button()
+        self.click_hide_full_screen_options_button()
         assert title == self.get_full_screen_popup_title_text(), "Full Screen title text incorrect"
 
     def get_map_body(self):
@@ -642,18 +669,28 @@ class Defs(Component):
         :return: checks whether the full screen mode has been enabled
         '''
         self.click_full_screen_button()
-        assert 'fullscreenView' in self.get_map_body().get_attribute('class'), 'Full Screen has not been triggered'
+        self.click_switch_full_screen_button()
+        self.click_hide_top_menu_bar_button()
+        self.click_hide_full_screen_options_button()
+        assert 'fullscreen' in self.get_map_body().get_attribute('class'), 'Full Screen has not been triggered'
 
     def open_full_screen(self):
-        if "open" in self.full_screen_button.get_attribute("class"):
+        if "active" in self.full_screen_button.get_attribute("class"):
             pass
         else:
             self.click_full_screen_button()
-        assert "open" in self.full_screen_button.get_attribute("class"), "Fullscreen mode was not activated correctly"
+            self.click_switch_full_screen_button()
+            self.click_hide_top_menu_bar_button()
+            self.click_hide_full_screen_options_button()
+        assert "active" in self.full_screen_button.get_attribute("class"), "Fullscreen mode was not activated correctly"
 
     def close_full_screen(self):
-        if "open" in self.full_screen_button.get_attribute("class"):
+        if "active" in self.full_screen_button.get_attribute("class"):
             self.click_full_screen_button()
+            self.click_switch_full_screen_button()
+            self.click_hide_top_menu_bar_button()
+            self.click_hide_full_screen_options_button()
+            assert "active" not in self.full_screen_button.get_attribute("class"), "Fullscreen mode was not deactivated correctly"
         else:
             pass
 

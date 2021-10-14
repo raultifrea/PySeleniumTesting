@@ -1,11 +1,11 @@
+import unittest
+
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
 
 
 class TestClickAirportPins(unittest.TestCase):
 
     def testClickAirportPins(self):
-
         test = Defs()
 
         test.load()

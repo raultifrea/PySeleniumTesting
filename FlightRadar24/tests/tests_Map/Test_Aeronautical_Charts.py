@@ -1,9 +1,10 @@
+import unittest
+
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
 
 
 class TestAeronauticalCharts(unittest.TestCase):
-    Title =["Navaids", "Low altitude charts", "High altitude charts"]
+    Title = ["Navaids", "Low altitude charts", "High altitude charts"]
 
     def testAeronauticalCharts(self):
         test = Defs()

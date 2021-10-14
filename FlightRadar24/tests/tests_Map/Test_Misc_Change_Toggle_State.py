@@ -1,9 +1,9 @@
+import unittest
+
 from FlightRadar24.Pages.Map import Defs
-import unittest, time
 
 
 class TestMiscChangeToggleState(unittest.TestCase):
-
 
     def testMiscChangeToggleState(self):
         test = Defs()

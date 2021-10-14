@@ -1,8 +1,9 @@
-from FlightRadar24.Pages.Airlines import Defs
 import unittest
 
-class TestJumpToLetter(unittest.TestCase):
+from FlightRadar24.Pages.Airlines import Defs
 
+
+class TestJumpToLetter(unittest.TestCase):
     letter = "t"
 
     def testJumpToLetter(self):
