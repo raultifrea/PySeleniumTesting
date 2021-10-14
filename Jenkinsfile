@@ -3,29 +3,12 @@ pipeline {
 
     stages {
         stage('Hello') {
-            steps {
-                echo 'Hello World'
-            }
+            echo 'Hello World'
         }
-        stage('Build') {
-            steps {
-                echo 'Building'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing'
-            }
-        }
-        stage('Release') {
-            steps {
-                echo 'Releasing'
-            }
-        }
+        stage('Run tests') {
+            echo 'Running pytests'
+            def run_test_command = 'python -m pytest'
+            bat '${run_test_command}'
+        }      
     }
 }
